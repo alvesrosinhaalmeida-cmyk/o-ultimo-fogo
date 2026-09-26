@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O Último Fogo — Beta</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #050805;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#game-container {
+    position: relative;
+    width: min(100vw, 177.77vh);
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #09130c;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    image-rendering: pixelated;
+}
+
+#dialog {
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    bottom: 6%;
+    padding: 18px;
+    background: rgba(5, 8, 6, 0.95);
+    border: 2px solid #c9b86b;
+    border-radius: 12px;
+    color: white;
+    display: none;
+    cursor: pointer;
+}
+
+#speaker {
+    color: #d9c774;
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+#dialog-text {
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+#dialog-help {
+    margin-top: 8px;
+    color: #aaa;
+    font-size: 12px;
+}
+
+#touch-controls {
+    position: absolute;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.touch-group {
+    display: flex;
+    gap: 8px;
+    pointer-events: auto;
+}
+
+.touch-button {
+    width: 52px;
+    height: 52px;
+    border: 2px solid rgba(255,255,255,.25);
+    border-radius: 12px;
+    background: rgba(10,15,10,.75);
+    color: white;
+    font-size: 21px;
+    font-weight: bold;
+    touch-action: none;
+}
+
+.touch-button:active {
+    background: rgba(100,130,80,.8);
+}
+</style>
+</head>
+
+<body>
+
+<div id="game-container">
+
+<canvas id="game" width="960" height="540"></canvas>
+
+<div id="dialog">
+    <div id="speaker"></div>
+    <div id="dialog-text"></div>
+    <div id="dialog-help">Toque aqui ou pressione ENTER para continuar</div>
+</div>
+
+<div id="touch-controls">
+    <div class="touch-group">
+        <button class="touch-button" data-key="left">◀</button>
+        <button class="touch-button" data-key="right">▶</button>
+    </div>
+
+    <div class="touch-group">
+        <button class="touch-button" data-key="jump">↑</button>
+        <button class="touch-button" data-key="attack">⚔</button>
+    </div>
+</div>
+
+</div>
+
+<script>
+
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const WIDTH = 960;
+const HEIGHT = 540;
+
+const keys = {};
+
+let gameState = "dialog";
+let dialogueIndex = 0;
+let cameraX = 0;
+let shake = 0;
+let message = "";
+let messageTimer = 0;
+let boss = null;
+
+const player = {
+    x: 80,
+    y: 390,
+    width: 28,
+    height: 44,
+    vx: 0,
+    vy: 0,
+    speed: 5.5,
+    jump: 11.5,
+    onGround: false,
+    hp: 6,
+    maxHp: 6,
+    face: 1,
+    attackTimer: 0,
+    invincible: 0
+};
+
+const dialogues = [
+    [
+        "CAIO",
+        "Minha avó dizia que a floresta era viva."
+    ],
+    [
+        "CAIO",
+        "Eu achava que era só uma história..."
+    ],
+    [
+        "CAIO",
+        "Até a noite em que a chama da minha lanterna desapareceu."
+    ],
+    [
+        "NARRADOR",
+        "Um som ecoa no interior da mata."
+    ],
+    [
+        "CAIO",
+        "Se existe alguma resposta... ela está lá dentro."
+    ]
+];
+
+const platforms = [
+
+    {x:0, y:475, width:650, height:65},
+    {x:710, y:475, width:650, height:65},
+    {x:1410, y:475, width:650, height:65},
+    {x:2110, y:475, width:850, height:65},
+
+    {x:250, y:385, width:170, height:18},
+    {x:520, y:320, width:145, height:18},
+
+    {x:820, y:375, width:180, height:18},
+    {x:1070, y:305, width:170, height:18},
+
+    {x:1260, y:390, width:120, height:18},
+    {x:1490, y:350, width:180, height:18},
+
+    {x:1740, y:290, width:190, height:18},
+    {x:2140, y:380, width:160, height:18},
+
+    {x:2410, y:315, width:180, height:18}
+];
+
+let enemies = [];
+
+function createEnemies() {
+
+    return [
+
+        {
+            type:"guard",
+            x:340,
+            y:433,
+            width:30,
+            height:42,
+            hp:2,
+            home:340,
+            vx:1
+        },
+
+        {
+            type:"flying",
+            x:570,
+            y:270,
+            width:34,
+            height:28,
+            hp:2,
+            home:570,
+            vx:-1,
+            time:0
+        },
+
+        {
+            type:"guard",
+            x:860,
+            y:333,
+            width:30,
+            height:42,
+            hp:3,
+            home:860,
+            vx:-1
+        },
+
+        {
+            type:"spirit",
+            x:1110,
+            y:265,
+            width:28,
+            height:36,
+            hp:3,
+            home:1110,
+            vx:1,
+            time:0
+        },
+
+        {
+            type:"guard",
+            x:1510,
+            y:308,
+            width:30,
+            height:42,
+            hp:4,
+            home:1510,
+            vx:-1
+        },
+
+        {
+            type:"flying",
+            x:1780,
+            y:245,
+            width:34,
+            height:28,
+            hp:4,
+            home:1780,
+            vx:1,
+            time:0
+        },
+
+        {
+            type:"big",
+            x:2190,
+            y:328,
+            width:42,
+            height:52,
+            hp:5,
+            home:2190,
+            vx:-1
+        },
+
+        {
+            type:"spirit",
+            x:2450,
+            y:273,
+            width:28,
+            height:36,
+            hp:5,
+            home:2450,
+            vx:1,
+            time:0
+        }
+    ];
+}
+
+function resetGame() {
+
+    player.x = 80;
+    player.y = 390;
+    player.vx = 0;
+    player.vy = 0;
+    player.hp = player.maxHp;
+    player.face = 1;
+    player.attackTimer = 0;
+    player.invincible = 0;
+
+    gameState = "dialog";
+    dialogueIndex = 0;
+
+   
