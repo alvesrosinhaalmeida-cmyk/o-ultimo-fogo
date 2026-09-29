@@ -2,195 +2,260 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               user-scalable=no">
+
 <title>O Último Fogo</title>
 
 <style>
+
 *{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  user-select:none;
-  -webkit-user-select:none;
-  touch-action:none;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    user-select:none;
+    -webkit-user-select:none;
+    touch-action:none;
 }
 
 html,body{
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:#050708;
-  font-family:monospace;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#050807;
+    font-family:monospace;
 }
 
 body{
-  display:flex;
-  justify-content:center;
-  align-items:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
 #game{
-  position:relative;
-  width:min(100vw,177.78vh);
-  height:min(100vh,56.25vw);
-  background:#08100d;
-  overflow:hidden;
-  border:2px solid #263d32;
-  image-rendering:pixelated;
+    position:relative;
+    width:min(100vw,177.777vh);
+    height:min(100vh,56.25vw);
+    overflow:hidden;
+    background:#07100b;
+    border:2px solid #33483b;
 }
 
 canvas{
-  width:100%;
-  height:100%;
-  display:block;
-  image-rendering:pixelated;
+    width:100%;
+    height:100%;
+    display:block;
+    image-rendering:pixelated;
 }
 
 #hud{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  color:white;
-  text-shadow:3px 3px #000;
-  font-weight:bold;
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    color:white;
+    text-shadow:2px 2px #000;
+    font-weight:bold;
+}
+
+#healthBox{
+    position:absolute;
+    left:18px;
+    top:16px;
+    width:190px;
+    height:20px;
+    border:3px solid white;
+    background:#241313;
 }
 
 #health{
-  position:absolute;
-  left:18px;
-  top:16px;
-  width:180px;
-  height:18px;
-  border:3px solid #fff;
-  background:#211414;
+    height:100%;
+    width:100%;
+    background:#d33b3b;
 }
 
-#healthBar{
-  width:100%;
-  height:100%;
-  background:#c93636;
-}
-
-#stage{
-  position:absolute;
-  top:18px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:14px;
+#stageName{
+    position:absolute;
+    top:18px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:14px;
 }
 
 #coins{
-  position:absolute;
-  right:18px;
-  top:17px;
-  font-size:14px;
+    position:absolute;
+    right:20px;
+    top:18px;
+    font-size:15px;
+}
+
+#bossHud{
+    position:absolute;
+    top:48px;
+    left:50%;
+    transform:translateX(-50%);
+    width:320px;
+    display:none;
+}
+
+#bossName{
+    text-align:center;
+    margin-bottom:4px;
+}
+
+#bossBar{
+    height:13px;
+    border:2px solid white;
+    background:#240d0d;
+}
+
+#bossHealth{
+    height:100%;
+    width:100%;
+    background:#b83b3b;
 }
 
 #message{
-  position:absolute;
-  left:50%;
-  bottom:17%;
-  transform:translateX(-50%);
-  min-width:280px;
-  max-width:75%;
-  padding:12px 16px;
-  background:rgba(5,8,7,.88);
-  border:3px solid #d4a84b;
-  text-align:center;
-  font-size:13px;
-  line-height:1.5;
-  display:none;
+    position:absolute;
+    left:50%;
+    bottom:18%;
+    transform:translateX(-50%);
+    width:min(650px,80%);
+    padding:14px 18px;
+    background:rgba(5,10,7,.92);
+    border:3px solid #d5b35b;
+    color:white;
+    text-align:center;
+    font-size:14px;
+    line-height:1.5;
+    display:none;
 }
 
-#screen{
-  position:absolute;
-  inset:0;
-  background:rgba(3,7,6,.92);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  z-index:20;
+#menu{
+    position:absolute;
+    inset:0;
+    z-index:30;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(35,67,45,.55),
+            rgba(2,7,5,.97)
+        );
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
 }
 
 .panel{
-  width:min(600px,88%);
-  padding:30px;
-  border:4px solid #cda957;
-  background:#0c1712;
-  box-shadow:0 0 0 5px #15251d;
+    width:min(650px,88%);
+    padding:35px;
+    background:#0a1510;
+    border:4px solid #c8a54d;
+    box-shadow:
+        0 0 0 5px #17271d,
+        0 0 40px rgba(0,0,0,.8);
 }
 
 .title{
-  font-size:34px;
-  color:#e5bd63;
-  margin-bottom:10px;
+    color:#e3bd5e;
+    font-size:38px;
+    margin-bottom:12px;
+    letter-spacing:3px;
 }
 
 .subtitle{
-  color:#b6c8bd;
-  line-height:1.7;
-  margin-bottom:22px;
+    color:#b9c8bd;
+    font-size:14px;
+    line-height:1.7;
+    margin-bottom:25px;
 }
 
 button{
-  border:3px solid #d5b55d;
-  background:#17271e;
-  color:white;
-  padding:13px 25px;
-  font-family:monospace;
-  font-weight:bold;
-  font-size:15px;
-  cursor:pointer;
+    background:#17291f;
+    border:3px solid #d2b35b;
+    color:white;
+    padding:13px 30px;
+    font-family:monospace;
+    font-weight:bold;
+    font-size:15px;
 }
 
 button:active{
-  transform:translateY(2px);
-  background:#263d2f;
+    transform:translateY(2px);
+    background:#294432;
 }
 
 #controls{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:10;
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index:20;
 }
 
 .control{
-  position:absolute;
-  width:58px;
-  height:58px;
-  border-radius:10px;
-  border:3px solid rgba(255,255,255,.45);
-  background:rgba(10,18,14,.55);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:21px;
-  pointer-events:auto;
+    position:absolute;
+    width:60px;
+    height:60px;
+
+    border-radius:12px;
+    border:3px solid rgba(255,255,255,.4);
+
+    background:rgba(8,17,12,.58);
+
+    color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:21px;
+
+    pointer-events:auto;
 }
 
 .control:active{
-  background:rgba(100,130,100,.65);
+    background:rgba(100,130,100,.65);
 }
 
-#left{left:18px;bottom:18px}
-#right{left:84px;bottom:18px}
-#jump{right:150px;bottom:18px}
-#dash{right:84px;bottom:18px}
-#attack{right:18px;bottom:84px}
-#interact{right:18px;bottom:18px}
+#left{
+    left:18px;
+    bottom:18px;
+}
 
-@media(min-width:900px){
-  .control{
-    opacity:.35;
-  }
+#right{
+    left:88px;
+    bottom:18px;
+}
+
+#jump{
+    right:150px;
+    bottom:18px;
+}
+
+#dash{
+    right:82px;
+    bottom:18px;
+}
+
+#attack{
+    right:18px;
+    bottom:84px;
+}
+
+#interact{
+    right:18px;
+    bottom:18px;
 }
 
 .hidden{
-  display:none!important;
+    display:none !important;
 }
+
 </style>
 </head>
 
@@ -198,1888 +263,3775 @@ button:active{
 
 <div id="game">
 
-<canvas id="canvas" width="960" height="540"></canvas>
+<canvas id="canvas"
+        width="960"
+        height="540">
+</canvas>
 
 <div id="hud">
-  <div id="health">
-    <div id="healthBar"></div>
-  </div>
 
-  <div id="stage">1-1 — A Floresta Perdida</div>
-
-  <div id="coins">✦ 0</div>
-
-  <div id="message"></div>
-</div>
-
-<div id="screen">
-  <div class="panel">
-    <div class="title">O ÚLTIMO FOGO</div>
-
-    <div class="subtitle">
-      A floresta guarda histórias que ninguém mais acredita.<br>
-      Mas alguma coisa despertou.
-      <br><br>
-      Entre na mata e descubra o que aconteceu com o fogo.
+    <div id="healthBox">
+        <div id="health"></div>
     </div>
 
-    <button id="start">COMEÇAR</button>
-  </div>
+    <div id="stageName">
+        1-1 — A Floresta Perdida
+    </div>
+
+    <div id="coins">
+        ✦ 0
+    </div>
+
+    <div id="bossHud">
+
+        <div id="bossName">
+            CURUPIRA
+        </div>
+
+        <div id="bossBar">
+            <div id="bossHealth"></div>
+        </div>
+
+    </div>
+
+    <div id="message"></div>
+
+</div>
+
+<div id="menu">
+
+    <div class="panel">
+
+        <div class="title">
+            O ÚLTIMO FOGO
+        </div>
+
+        <div class="subtitle">
+
+            A floresta guarda histórias
+            que ninguém mais acredita.
+            <br><br>
+
+            Mas alguma coisa despertou.
+            <br><br>
+
+            Atravesse a mata,
+            descubra seus segredos
+            e encontre o fogo perdido.
+
+        </div>
+
+        <button id="startButton">
+            COMEÇAR
+        </button>
+
+    </div>
+
 </div>
 
 <div id="controls">
-  <div class="control" id="left">◀</div>
-  <div class="control" id="right">▶</div>
-  <div class="control" id="jump">▲</div>
-  <div class="control" id="dash">◆</div>
-  <div class="control" id="attack">⚔</div>
-  <div class="control" id="interact">●</div>
+
+    <div class="control" id="left">
+        ◀
+    </div>
+
+    <div class="control" id="right">
+        ▶
+    </div>
+
+    <div class="control" id="jump">
+        ▲
+    </div>
+
+    <div class="control" id="dash">
+        ◆
+    </div>
+
+    <div class="control" id="attack">
+        ⚔
+    </div>
+
+    <div class="control" id="interact">
+        ●
+    </div>
+
 </div>
 
 </div>
 
 <script>
+
 "use strict";
 
-/* =========================================================
-   O ÚLTIMO FOGO
-   MUNDO 1 — FLORESTA
-   ========================================================= */
+const canvas =
+    document.getElementById("canvas");
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const ctx =
+    canvas.getContext("2d");
 
 ctx.imageSmoothingEnabled = false;
 
-const W = canvas.width;
-const H = canvas.height;
+const WIDTH = 960;
+const HEIGHT = 540;
 
-/* ---------- ELEMENTOS ---------- */
 
-const screen = document.getElementById("screen");
-const startButton = document.getElementById("start");
-const healthBar = document.getElementById("healthBar");
-const stageText = document.getElementById("stage");
-const coinsText = document.getElementById("coins");
-const message = document.getElementById("message");
+/* =========================
+   INTERFACE
+========================= */
 
-/* ---------- ÁUDIO ---------- */
+const menu =
+    document.getElementById("menu");
 
-let audio = null;
+const startButton =
+    document.getElementById("startButton");
+
+const healthBar =
+    document.getElementById("health");
+
+const coinsText =
+    document.getElementById("coins");
+
+const stageName =
+    document.getElementById("stageName");
+
+const messageBox =
+    document.getElementById("message");
+
+const bossHud =
+    document.getElementById("bossHud");
+
+const bossHealth =
+    document.getElementById("bossHealth");
+
+
+/* =========================
+   ÁUDIO
+========================= */
+
+let audioContext = null;
 
 function startAudio(){
-  if(!audio){
-    audio = new (window.AudioContext || window.webkitAudioContext)();
-  }
 
-  if(audio.state === "suspended"){
-    audio.resume();
-  }
+    if(!audioContext){
+
+        audioContext =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+    }
+
+    if(audioContext.state === "suspended"){
+        audioContext.resume();
+    }
 }
 
-function sound(freq,duration,type="square",volume=.04){
-  if(!audio) return;
+function beep(
+    frequency,
+    duration,
+    type="square",
+    volume=.04
+){
 
-  const osc = audio.createOscillator();
-  const gain = audio.createGain();
+    if(!audioContext) return;
 
-  osc.type = type;
-  osc.frequency.value = freq;
+    const oscillator =
+        audioContext.createOscillator();
 
-  gain.gain.setValueAtTime(volume,audio.currentTime);
-  gain.gain.exponentialRampToValueAtTime(
-    .001,
-    audio.currentTime + duration
-  );
+    const gain =
+        audioContext.createGain();
 
-  osc.connect(gain);
-  gain.connect(audio.destination);
+    oscillator.type = type;
 
-  osc.start();
-  osc.stop(audio.currentTime + duration);
+    oscillator.frequency.value =
+        frequency;
+
+    gain.gain.setValueAtTime(
+        volume,
+        audioContext.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        .001,
+        audioContext.currentTime + duration
+    );
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.start();
+
+    oscillator.stop(
+        audioContext.currentTime + duration
+    );
 }
 
-function attackSound(){
-  sound(160,.07,"sawtooth",.08);
-  setTimeout(()=>sound(90,.08,"square",.04),25);
+function soundAttack(){
+
+    beep(170,.07,"sawtooth",.08);
+
+    setTimeout(()=>{
+        beep(90,.08,"square",.04);
+    },30);
 }
 
-function jumpSound(){
-  sound(280,.08,"square",.05);
-  setTimeout(()=>sound(420,.07,"square",.03),35);
+function soundJump(){
+
+    beep(280,.08,"square",.05);
+
+    setTimeout(()=>{
+        beep(420,.07,"square",.03);
+    },40);
 }
 
-function hitSound(){
-  sound(70,.12,"sawtooth",.08);
+function soundDash(){
+
+    beep(100,.06,"sawtooth",.07);
+
+    setTimeout(()=>{
+        beep(190,.08,"square",.04);
+    },30);
 }
 
-function dashSound(){
-  sound(100,.06,"sawtooth",.07);
-  setTimeout(()=>sound(180,.08,"square",.04),30);
+function soundHit(){
+
+    beep(70,.12,"sawtooth",.08);
 }
 
-function coinSound(){
-  sound(700,.06,"square",.04);
-  setTimeout(()=>sound(1000,.08,"square",.03),50);
+function soundCoin(){
+
+    beep(700,.06,"square",.04);
+
+    setTimeout(()=>{
+        beep(1000,.08,"square",.03);
+    },50);
 }
 
-function bossSound(){
-  sound(80,.2,"sawtooth",.08);
-  setTimeout(()=>sound(55,.25,"sawtooth",.07),100);
-}
 
-/* ---------- INPUT ---------- */
+/* =========================
+   INPUT
+========================= */
 
 const keys = {};
 
-window.addEventListener("keydown",e=>{
-  keys[e.key.toLowerCase()] = true;
+window.addEventListener(
+    "keydown",
+    event=>{
 
-  if(
-    ["arrowleft","arrowright","arrowup"," ","z","x","c"].includes(
-      e.key.toLowerCase()
-    )
-  ){
-    e.preventDefault();
-  }
-});
+        const key =
+            event.key.toLowerCase();
 
-window.addEventListener("keyup",e=>{
-  keys[e.key.toLowerCase()] = false;
-});
+        keys[key]=true;
 
-function button(id,key){
-  const b=document.getElementById(id);
+        if([
+            "arrowleft",
+            "arrowright",
+            "arrowup",
+            " ",
+            "z",
+            "x",
+            "c"
+        ].includes(key)){
 
-  const down=e=>{
-    e.preventDefault();
-    keys[key]=true;
-  };
+            event.preventDefault();
+        }
+    }
+);
 
-  const up=e=>{
-    e.preventDefault();
-    keys[key]=false;
-  };
+window.addEventListener(
+    "keyup",
+    event=>{
 
-  b.addEventListener("pointerdown",down);
-  b.addEventListener("pointerup",up);
-  b.addEventListener("pointercancel",up);
-  b.addEventListener("pointerleave",up);
+        keys[
+            event.key.toLowerCase()
+        ]=false;
+    }
+);
+
+
+function bindButton(
+    id,
+    key
+){
+
+    const button =
+        document.getElementById(id);
+
+    function press(event){
+
+        event.preventDefault();
+
+        keys[key]=true;
+    }
+
+    function release(event){
+
+        event.preventDefault();
+
+        keys[key]=false;
+    }
+
+    button.addEventListener(
+        "pointerdown",
+        press
+    );
+
+    button.addEventListener(
+        "pointerup",
+        release
+    );
+
+    button.addEventListener(
+        "pointercancel",
+        release
+    );
+
+    button.addEventListener(
+        "pointerleave",
+        release
+    );
 }
 
-button("left","arrowleft");
-button("right","arrowright");
-button("jump","arrowup");
-button("dash","x");
-button("attack","z");
-button("interact","c");
+bindButton(
+    "left",
+    "arrowleft"
+);
 
-/* ---------- CÂMERA ---------- */
+bindButton(
+    "right",
+    "arrowright"
+);
 
-const camera = {
-  x:0,
-  y:0,
-  shake:0
-};
+bindButton(
+    "jump",
+    "arrowup"
+);
 
-/* ---------- MUNDO ---------- */
+bindButton(
+    "dash",
+    "x"
+);
 
-const worlds = [
-  {
-    name:"1-1 — A Floresta Perdida",
-    width:3600
-  },
-  {
-    name:"1-2 — Pegadas ao Contrário",
-    width:4200
-  },
-  {
-    name:"1-3 — O Território Proibido",
-    width:4700
-  },
-  {
-    name:"1-4 — O Coração da Mata",
-    width:5200
-  },
-  {
-    name:"1-5 — O Guardião da Mata",
-    width:4200
-  }
+bindButton(
+    "attack",
+    "z"
+);
+
+bindButton(
+    "interact",
+    "c"
+);
+
+
+/* =========================
+   MUNDO
+========================= */
+
+const stages = [
+
+    {
+        name:"1-1 — A Floresta Perdida",
+        width:3600
+    },
+
+    {
+        name:"1-2 — Pegadas ao Contrário",
+        width:4200
+    },
+
+    {
+        name:"1-3 — O Território Proibido",
+        width:4700
+    },
+
+    {
+        name:"1-4 — O Coração da Mata",
+        width:5200
+    },
+
+    {
+        name:"1-5 — O Guardião da Mata",
+        width:4200
+    }
+
 ];
 
-let level = 0;
-let levelWidth = worlds[level].width;
+let currentStage = 0;
 
-/* ---------- PLAYER ---------- */
+let worldWidth =
+    stages[0].width;
 
-const player = {
-  x:120,
-  y:360,
-  w:26,
-  h:46,
 
-  vx:0,
-  vy:0,
+/* =========================
+   CÂMERA
+========================= */
 
-  speed:3.2,
-  jump:10.8,
+const camera = {
 
-  health:100,
-  maxHealth:100,
+    x:0,
+    shake:0
 
-  grounded:false,
-
-  facing:1,
-
-  attacking:false,
-  attackTimer:0,
-  attackCooldown:0,
-
-  dashTimer:0,
-  dashCooldown:0,
-
-  invincible:0,
-
-  checkpointX:120,
-  checkpointY:360,
-
-  coins:0,
-
-  combo:0,
-  comboTimer:0,
-
-  dead:false
 };
 
-/* ---------- PLATAFORMAS ---------- */
 
-let platforms = [];
+/* =========================
+   PLAYER
+========================= */
 
-function addPlatform(x,y,w,h=30){
-  platforms.push({x,y,w,h});
+const player = {
+
+    x:120,
+    y:350,
+
+    width:28,
+    height:46,
+
+    vx:0,
+    vy:0,
+
+    speed:3.3,
+    jumpPower:11,
+
+    facing:1,
+
+    grounded:false,
+
+    health:100,
+    maxHealth:100,
+
+    attacking:false,
+    attackTimer:0,
+    attackCooldown:0,
+
+    dashTimer:0,
+    dashCooldown:0,
+
+    invincible:0,
+
+    combo:0,
+    comboTimer:0,
+
+    coins:0,
+
+    checkpointX:120,
+    checkpointY:350,
+
+    dead:false,
+
+    /* habilidade do Curupira */
+
+    forestSteps:false
+
+};
+
+
+/* =========================
+   PLATAFORMAS
+========================= */
+
+let platforms=[];
+
+function createPlatform(
+    x,
+    y,
+    width,
+    height=50
+){
+
+    platforms.push({
+        x,
+        y,
+        width,
+        height
+    });
+
 }
 
-/* ---------- INIMIGOS ---------- */
+
+/* =========================
+   INIMIGOS
+========================= */
 
 let enemies=[];
 
-/* ---------- PARTICULAS ---------- */
+function createEnemy(
+    type,
+    x,
+    y
+){
 
-let particles=[];
+    const data = {
 
-function particle(x,y,color,size=3,vx=0,vy=0,life=30){
-  particles.push({
-    x,y,color,size,vx,vy,life,maxLife:life
-  });
+        boar:{
+            width:38,
+            height:30,
+            hp:35
+        },
+
+        owl:{
+            width:36,
+            height:27,
+            hp:25
+        },
+
+        guardian:{
+            width:38,
+            height:36,
+            hp:60
+        },
+
+        spirit:{
+            width:34,
+            height:38,
+            hp:45
+        }
+
+    };
+
+    const d =
+        data[type];
+
+    enemies.push({
+
+        type,
+
+        x,
+        y,
+
+        width:d.width,
+        height:d.height,
+
+        vx:0,
+        vy:0,
+
+        hp:d.hp,
+        maxHp:d.hp,
+
+        direction:
+            Math.random()>.5
+            ?1
+            :-1,
+
+        hitTimer:0,
+
+        dead:false
+
+    });
+
 }
 
-/* ---------- COLETÁVEIS ---------- */
+
+/* =========================
+   COLETÁVEIS
+========================= */
 
 let collectibles=[];
 
-/* ---------- BOSS ---------- */
+
+/* =========================
+   PARTÍCULAS
+========================= */
+
+let particles=[];
+
+function createParticle(
+    x,
+    y,
+    color,
+    size,
+    vx,
+    vy,
+    life=30
+){
+
+    particles.push({
+
+        x,
+        y,
+
+        color,
+        size,
+
+        vx,
+        vy,
+
+        life,
+        maxLife:life
+
+    });
+
+}
+
+
+/* =========================
+   BOSS
+========================= */
 
 let boss=null;
 
-/* ---------- FASE ---------- */
+function createBoss(){
 
-function buildLevel(){
-  platforms=[];
-  enemies=[];
-  collectibles=[];
-  particles=[];
-  boss=null;
+    boss={
 
-  levelWidth=worlds[level].width;
+        x:3650,
+        y:330,
 
-  /* chão */
+        width:90,
+        height:120,
 
-  for(let x=0;x<levelWidth;x+=180){
-    addPlatform(x,490,180,50);
-  }
+        hp:500,
+        maxHp:500,
 
-  /* plataformas */
+        phase:1,
 
-  if(level===0){
-    addPlatform(300,410,180);
-    addPlatform(590,350,150);
-    addPlatform(850,430,210);
-    addPlatform(1160,350,180);
-    addPlatform(1450,290,170);
-    addPlatform(1740,400,220);
-    addPlatform(2100,320,180);
-    addPlatform(2380,390,220);
-    addPlatform(2700,300,180);
-    addPlatform(3020,380,200);
-  }
+        active:false,
 
-  if(level===1){
-    addPlatform(250,390,170);
-    addPlatform(500,320,180);
-    addPlatform(820,390,180);
-    addPlatform(1100,290,170);
-    addPlatform(1400,370,220);
-    addPlatform(1780,300,160);
-    addPlatform(2100,400,200);
-    addPlatform(2500,330,220);
-    addPlatform(2900,270,180);
-    addPlatform(3300,370,220);
-  }
+        attackTimer:100,
 
-  if(level===2){
-    addPlatform(300,360,160);
-    addPlatform(580,290,180);
-    addPlatform(900,390,170);
-    addPlatform(1250,300,220);
-    addPlatform(1600,400,180);
-    addPlatform(1950,320,180);
-    addPlatform(2250,250,180);
-    addPlatform(2600,380,230);
-    addPlatform(3100,290,220);
-    addPlatform(3500,350,180);
-  }
+        hitTimer:0,
 
-  if(level===3){
-    addPlatform(250,400,180);
-    addPlatform(550,330,160);
-    addPlatform(820,250,180);
-    addPlatform(1150,360,220);
-    addPlatform(1500,280,180);
-    addPlatform(1850,380,220);
-    addPlatform(2200,300,170);
-    addPlatform(2550,220,180);
-    addPlatform(2900,350,220);
-    addPlatform(3350,280,200);
-  }
+        defeated:false
 
-  if(level===4){
-    addPlatform(300,400,200);
-    addPlatform(650,330,180);
-    addPlatform(1000,390,180);
-    addPlatform(1350,300,220);
-    addPlatform(1750,380,200);
-    addPlatform(2100,300,220);
-    addPlatform(2500,380,220);
-    addPlatform(2900,310,200);
-    addPlatform(3300,390,250);
-  }
-
-  spawnEnemies();
-
-  if(level===4){
-    spawnBoss();
-  }
-
-  player.x=player.checkpointX=120;
-  player.y=player.checkpointY=360;
-  player.vx=0;
-  player.vy=0;
-  player.health=player.maxHealth;
-
-  stageText.textContent=worlds[level].name;
-}
-
-/* ---------- INIMIGOS ---------- */
-
-function enemy(type,x,y){
-  enemies.push({
-    type,
-    x,
-    y,
-    w:type==="owl"?34:36,
-    h:type==="owl"?26:30,
-
-    vx:0,
-    vy:0,
-
-    hp:
-      type==="boar"?30:
-      type==="owl"?20:
-      type==="spirit"?35:
-      55,
-
-    maxHp:
-      type==="boar"?30:
-      type==="owl"?20:
-      type==="spirit"?35:
-      55,
-
-    dir:Math.random()>.5?1:-1,
-    attackTimer:0,
-    hitTimer:0,
-    dead:false
-  });
-}
-
-function spawnEnemies(){
-
-  const spacing = level===0 ? 300 : 260;
-
-  for(let x=500;x<levelWidth-500;x+=spacing){
-
-    const r=Math.random();
-
-    if(r<.42){
-      enemy("boar",x,450);
-    }
-    else if(r<.67){
-      enemy("owl",x,220+Math.random()*100);
-    }
-    else if(r<.87){
-      enemy("guardian",x,450);
-    }
-    else{
-      enemy("spirit",x,450);
-    }
-  }
-
-  for(let i=0;i<14;i++){
-
-    collectibles.push({
-      x:220+i*250+Math.random()*80,
-      y:250+Math.random()*170,
-      taken:false
-    });
-  }
-}
-
-/* ---------- BOSS ---------- */
-
-function spawnBoss(){
-
-  boss={
-    x:3650,
-    y:310,
-
-    w:90,
-    h:120,
-
-    hp:500,
-    maxHp:500,
-
-    vx:0,
-    vy:0,
-
-    phase:1,
-
-    attackTimer:0,
-    hitTimer:0,
-
-    active:false,
-    defeated:false
-  };
-}
-
-/* ---------- COLISÃO ---------- */
-
-function rects(a,b){
-  return (
-    a.x < b.x+b.w &&
-    a.x+a.w > b.x &&
-    a.y < b.y+b.h &&
-    a.y+a.h > b.y
-  );
-}
-
-/* ---------- FÍSICA DO PLAYER ---------- */
-
-function updatePlayer(){
-
-  if(player.dead) return;
-
-  if(player.invincible>0) player.invincible--;
-
-  if(player.attackCooldown>0) player.attackCooldown--;
-  if(player.dashCooldown>0) player.dashCooldown--;
-
-  if(player.comboTimer>0){
-    player.comboTimer--;
-  }else{
-    player.combo=0;
-  }
-
-  let move=0;
-
-  if(keys["arrowleft"] || keys["a"]) move-=1;
-  if(keys["arrowright"] || keys["d"]) move+=1;
-
-  if(move!==0){
-    player.vx += move*.65;
-
-    if(Math.abs(player.vx)>player.speed){
-      player.vx=move*player.speed;
-    }
-
-    player.facing=move;
-  }else{
-    player.vx*=.78;
-  }
-
-  /* pulo */
-
-  if(
-    (keys["arrowup"] || keys["w"] || keys[" "]) &&
-    player.grounded
-  ){
-    player.vy=-player.jump;
-    player.grounded=false;
-    jumpSound();
-
-    for(let i=0;i<6;i++){
-      particle(
-        player.x+player.w/2,
-        player.y+player.h,
-        "#b4c6a9",
-        2,
-        (Math.random()-.5)*2,
-        -Math.random()*2
-      );
-    }
-  }
-
-  /* ataque */
-
-  if(
-    (keys["z"] || keys["j"]) &&
-    player.attackCooldown<=0
-  ){
-    player.attacking=true;
-    player.attackTimer=9;
-    player.attackCooldown=18;
-
-    player.combo++;
-    player.comboTimer=50;
-
-    attackSound();
-
-    for(let i=0;i<5;i++){
-      particle(
-        player.x+player.w/2+player.facing*18,
-        player.y+18,
-        "#f1d37b",
-        3,
-        player.facing*(Math.random()*3),
-        (Math.random()-.5)*3
-      );
-    }
-  }
-
-  if(player.attackTimer>0){
-    player.attackTimer--;
-  }else{
-    player.attacking=false;
-  }
-
-  /* dash */
-
-  if(
-    keys["x"] &&
-    player.dashCooldown<=0
-  ){
-    player.dashCooldown=55;
-    player.dashTimer=10;
-    player.vx=player.facing*11;
-    player.invincible=18;
-
-    dashSound();
-
-    for(let i=0;i<10;i++){
-      particle(
-        player.x,
-        player.y+20,
-        "#8cb89a",
-        3,
-        -player.facing*Math.random()*2,
-        (Math.random()-.5)*2,
-        20
-      );
-    }
-  }
-
-  if(player.dashTimer>0){
-    player.dashTimer--;
-    player.vx=player.facing*11;
-  }
-
-  player.vy += .5;
-
-  if(player.vy>14) player.vy=14;
-
-  player.x += player.vx;
-  player.y += player.vy;
-
-  player.grounded=false;
-
-  /* colisão plataformas */
-
-  for(const p of platforms){
-
-    if(
-      player.x+player.w>p.x &&
-      player.x<p.x+p.w &&
-      player.y+player.h>=p.y &&
-      player.y+player.h<=p.y+player.vy+5 &&
-      player.vy>=0
-    ){
-      player.y=p.y-player.h;
-      player.vy=0;
-      player.grounded=true;
-    }
-  }
-
-  /* limites */
-
-  if(player.x<0) player.x=0;
-
-  if(player.x>levelWidth-player.w){
-    player.x=levelWidth-player.w;
-  }
-
-  /* queda */
-
-  if(player.y>650){
-    damagePlayer(999);
-  }
-
-  /* ataque aos inimigos */
-
-  if(player.attacking){
-    const hitbox={
-      x:player.facing>0 ? player.x+player.w : player.x-42,
-      y:player.y+8,
-      w:42,
-      h:34
     };
 
-    for(const e of enemies){
-
-      if(e.dead) continue;
-
-      if(rects(hitbox,e)){
-
-        const damage=12+player.combo*2;
-
-        e.hp-=damage;
-        e.hitTimer=8;
-
-        e.vx=player.facing*4;
-
-        camera.shake=5;
-
-        for(let i=0;i<8;i++){
-          particle(
-            e.x+e.w/2,
-            e.y+e.h/2,
-            "#f4d06f",
-            3,
-            (Math.random()-.5)*4,
-            (Math.random()-.5)*4
-          );
-        }
-
-        if(e.hp<=0){
-          e.dead=true;
-
-          player.coins++;
-          coinSound();
-
-          for(let i=0;i<14;i++){
-            particle(
-              e.x+e.w/2,
-              e.y+e.h/2,
-              "#9db89c",
-              4,
-              (Math.random()-.5)*5,
-              (Math.random()-.5)*5
-            );
-          }
-        }
-      }
-    }
-
-    /* ataque no boss */
-
-    if(boss && boss.active && !boss.defeated){
-
-      const hitboxBoss={
-        x:player.facing>0 ? player.x+player.w : player.x-50,
-        y:player.y+4,
-        w:50,
-        h:42
-      };
-
-      if(rects(hitboxBoss,boss) && boss.hitTimer<=0){
-
-        boss.hp-=
-          8+
-          player.combo*2;
-
-        boss.hitTimer=12;
-        camera.shake=8;
-
-        bossSound();
-
-        for(let i=0;i<12;i++){
-          particle(
-            boss.x+boss.w/2,
-            boss.y+boss.h/2,
-            "#e2a950",
-            4,
-            (Math.random()-.5)*5,
-            (Math.random()-.5)*5
-          );
-        }
-
-        if(boss.hp<=0){
-          boss.hp=0;
-          boss.defeated=true;
-          victoryBoss();
-        }
-      }
-    }
-  }
 }
 
-/* ---------- DANO ---------- */
 
-function damagePlayer(amount){
-
-  if(player.invincible>0 || player.dead) return;
-
-  player.health-=amount;
-  player.invincible=50;
-
-  hitSound();
-  camera.shake=10;
-
-  for(let i=0;i<12;i++){
-    particle(
-      player.x+player.w/2,
-      player.y+player.h/2,
-      "#d95050",
-      3,
-      (Math.random()-.5)*5,
-      (Math.random()-.5)*5
-    );
-  }
-
-  if(player.health<=0){
-    player.health=0;
-    die();
-  }
-
-  updateHUD();
-}
-
-/* ---------- INIMIGOS ---------- */
-
-function updateEnemies(){
-
-  for(const e of enemies){
-
-    if(e.dead) continue;
-
-    if(e.hitTimer>0) e.hitTimer--;
-
-    if(e.type==="owl"){
-      updateOwl(e);
-    }else{
-      updateGroundEnemy(e);
-    }
-
-    /* ataque */
-
-    if(rects(player,e) && player.invincible<=0){
-      damagePlayer(
-        e.type==="guardian"?18:
-        e.type==="spirit"?15:
-        12
-      );
-
-      player.vx +=
-        player.x<e.x ? -5 : 5;
-
-      player.vy=-5;
-    }
-  }
-
-  enemies=enemies.filter(e=>!e.dead);
-}
-
-function updateGroundEnemy(e){
-
-  const dx=player.x-e.x;
-
-  if(Math.abs(dx)<280){
-    e.dir=dx>0?1:-1;
-  }
-
-  e.vx=e.dir*(e.type==="guardian"?.8:1.3);
-
-  e.x+=e.vx;
-
-  if(e.x<0){
-    e.x=0;
-    e.dir=1;
-  }
-
-  if(e.x>levelWidth-e.w){
-    e.x=levelWidth-e.w;
-    e.dir=-1;
-  }
-
-  /* chão */
-
-  e.y=450;
-
-  if(e.type==="spirit"){
-
-    e.y=
-      420+
-      Math.sin(performance.now()/300+e.x)*30;
-  }
-}
-
-function updateOwl(e){
-
-  const dx=player.x-e.x;
-
-  if(Math.abs(dx)<450){
-    e.x += dx*.012;
-  }
-
-  e.y +=
-    Math.sin(performance.now()/250+e.x)*.8;
-
-  if(rects(player,e) && player.invincible<=0){
-    damagePlayer(12);
-  }
-}
-
-/* ---------- BOSS UPDATE ---------- */
-
-function updateBoss(){
-
-  if(!boss || boss.defeated) return;
-
-  if(
-    player.x>boss.x-700 &&
-    level===4
-  ){
-    boss.active=true;
-  }
-
-  if(!boss.active) return;
-
-  if(boss.hitTimer>0) boss.hitTimer--;
-
-  const hpPercent=boss.hp/boss.maxHp;
-
-  if(hpPercent>.66){
-    boss.phase=1;
-  }
-  else if(hpPercent>.33){
-    boss.phase=2;
-  }
-  else{
-    boss.phase=3;
-  }
-
-  const dx=player.x-boss.x;
-
-  boss.x +=
-    Math.sign(dx) *
-    (
-      boss.phase===1 ? .8 :
-      boss.phase===2 ? 1.2 :
-      1.7
-    );
-
-  boss.y=350;
-
-  boss.attackTimer--;
-
-  if(boss.attackTimer<=0){
-
-    boss.attackTimer=
-      boss.phase===1 ? 100 :
-      boss.phase===2 ? 75 :
-      52;
-
-    bossAttack();
-  }
-
-  if(rects(player,boss) && player.invincible<=0){
-    damagePlayer(
-      boss.phase===1?20:
-      boss.phase===2?24:
-      30
-    );
-  }
-}
-
-function bossAttack(){
-
-  const count=
-    boss.phase===1 ? 2 :
-    boss.phase===2 ? 4 :
-    6;
-
-  for(let i=0;i<count;i++){
-
-    setTimeout(()=>{
-
-      if(!boss || boss.defeated) return;
-
-      const angle=
-        Math.atan2(
-          player.y-boss.y,
-          player.x-boss.x
-        )+
-        (i-count/2)*.16;
-
-      const speed=
-        boss.phase===3?5.5:4;
-
-      projectiles.push({
-        x:boss.x+boss.w/2,
-        y:boss.y+40,
-        vx:Math.cos(angle)*speed,
-        vy:Math.sin(angle)*speed,
-        life:150,
-        size:7
-      });
-
-    },i*100);
-  }
-
-  camera.shake=6;
-}
-
-/* ---------- PROJÉTEIS ---------- */
+/* =========================
+   PROJÉTEIS
+========================= */
 
 let projectiles=[];
 
-function updateProjectiles(){
 
-  for(const p of projectiles){
+/* =========================
+   CONSTRUIR FASE
+========================= */
 
-    p.x+=p.vx;
-    p.y+=p.vy;
-    p.life--;
+function buildStage(){
 
-    if(
-      p.x<camera.x-100 ||
-      p.x>camera.x+W+100 ||
-      p.life<=0
+    platforms=[];
+    enemies=[];
+    collectibles=[];
+    particles=[];
+    projectiles=[];
+    boss=null;
+
+    worldWidth =
+        stages[currentStage].width;
+
+    stageName.textContent =
+        stages[currentStage].name;
+
+
+    /* CHÃO */
+
+    for(
+        let x=0;
+        x<worldWidth;
+        x+=180
     ){
-      p.dead=true;
-      continue;
-    }
 
-    if(
-      p.x<player.x+player.w &&
-      p.x+p.size>player.x &&
-      p.y<player.y+player.h &&
-      p.y+p.size>player.y
-    ){
-      damagePlayer(
-        boss.phase===3?20:12
-      );
-
-      p.dead=true;
-    }
-  }
-
-  projectiles=projectiles.filter(p=>!p.dead);
-}
-
-/* ---------- COLETÁVEIS ---------- */
-
-function updateCollectibles(){
-
-  for(const c of collectibles){
-
-    if(c.taken) continue;
-
-    if(
-      Math.abs(player.x-c.x)<25 &&
-      Math.abs(player.y-c.y)<40
-    ){
-      c.taken=true;
-      player.coins++;
-
-      coinSound();
-
-      for(let i=0;i<10;i++){
-        particle(
-          c.x,
-          c.y,
-          "#d8bb5a",
-          3,
-          (Math.random()-.5)*3,
-          (Math.random()-.5)*3
+        createPlatform(
+            x,
+            490,
+            180,
+            50
         );
-      }
     }
-  }
-}
 
-/* ---------- CHECKPOINT ---------- */
 
-function updateCheckpoint(){
+    /* PLATAFORMAS */
 
-  if(
-    player.x>levelWidth*.48 &&
-    player.checkpointX<levelWidth*.48
-  ){
+    const layouts=[
 
-    player.checkpointX=levelWidth*.48;
-    player.checkpointY=300;
+        [
+            [300,410,180],
+            [590,350,150],
+            [850,430,210],
+            [1160,350,180],
+            [1450,290,170],
+            [1740,400,220],
+            [2100,320,180],
+            [2380,390,220],
+            [2700,300,180],
+            [3020,380,200]
+        ],
 
-    showMessage(
-      "Você encontrou um ponto seguro."
-    );
+        [
+            [250,390,170],
+            [500,320,180],
+            [820,390,180],
+            [1100,290,170],
+            [1400,370,220],
+            [1780,300,160],
+            [2100,400,200],
+            [2500,330,220],
+            [2900,270,180],
+            [3300,370,220]
+        ],
 
-    for(let i=0;i<20;i++){
-      particle(
-        player.x,
-        player.y,
-        "#d5b55d",
-        3,
-        (Math.random()-.5)*3,
-        -Math.random()*3
-      );
+        [
+            [300,360,160],
+            [580,290,180],
+            [900,390,170],
+            [1250,300,220],
+            [1600,400,180],
+            [1950,320,180],
+            [2250,250,180],
+            [2600,380,230],
+            [3100,290,220],
+            [3500,350,180]
+        ],
+
+        [
+            [250,400,180],
+            [550,330,160],
+            [820,250,180],
+            [1150,360,220],
+            [1500,280,180],
+            [1850,380,220],
+            [2200,300,170],
+            [2550,220,180],
+            [2900,350,220],
+            [3350,280,200]
+        ],
+
+        [
+            [300,400,200],
+            [650,330,180],
+            [1000,390,180],
+            [1350,300,220],
+            [1750,380,200],
+            [2100,300,220],
+            [2500,380,220],
+            [2900,310,200],
+            [3300,390,250]
+        ]
+
+    ];
+
+    for(
+        const p of layouts[currentStage]
+    ){
+
+        createPlatform(
+            p[0],
+            p[1],
+            p[2]
+        );
+
     }
-  }
-}
 
-/* ---------- MORTE ---------- */
 
-function die(){
+    /* INIMIGOS */
 
-  player.dead=true;
+    for(
+        let x=450;
+        x<worldWidth-400;
+        x+=280
+    ){
 
-  setTimeout(()=>{
+        const random =
+            Math.random();
 
-    player.dead=false;
+        if(random<.4){
 
-    player.x=player.checkpointX;
-    player.y=player.checkpointY;
+            createEnemy(
+                "boar",
+                x,
+                450
+            );
+
+        }
+        else if(random<.62){
+
+            createEnemy(
+                "owl",
+                x,
+                250
+            );
+
+        }
+        else if(random<.84){
+
+            createEnemy(
+                "guardian",
+                x,
+                450
+            );
+
+        }
+        else{
+
+            createEnemy(
+                "spirit",
+                x,
+                420
+            );
+        }
+
+    }
+
+
+    /* COLETÁVEIS */
+
+    for(
+        let i=0;
+        i<16;
+        i++
+    ){
+
+        collectibles.push({
+
+            x:
+                220+
+                i*240+
+                Math.random()*70,
+
+            y:
+                250+
+                Math.random()*150,
+
+            collected:false
+
+        });
+
+    }
+
+
+    /* BOSS */
+
+    if(currentStage===4){
+
+        createBoss();
+
+    }
+
+
+    player.x =
+        player.checkpointX =
+        120;
+
+    player.y =
+        player.checkpointY =
+        350;
 
     player.vx=0;
     player.vy=0;
 
-    player.health=player.maxHealth;
-    player.invincible=60;
+    player.health =
+        player.maxHealth;
 
-    showMessage("A floresta ainda não terminou com você.");
+    updateHUD();
 
-  },700);
+    bossHud.style.display =
+        currentStage===4
+        ?"block"
+        :"none";
+
 }
 
-/* ---------- BOSS DERROTADO ---------- */
 
-function victoryBoss(){
+/* =========================
+   COLISÃO
+========================= */
 
-  boss.defeated=true;
+function collision(a,b){
 
-  projectiles=[];
+    return (
 
-  player.coins+=50;
+        a.x < b.x+b.width &&
 
-  showMessage(
-    "CURUPIRA DERROTADO — PASSOS DA MATA DESBLOQUEADOS"
-  );
+        a.x+a.width > b.x &&
 
-  setTimeout(()=>{
+        a.y < b.y+b.height &&
 
-    screen.classList.remove("hidden");
+        a.y+a.height > b.y
 
-    screen.innerHTML=`
-      <div class="panel">
-        <div class="title">GUARDIÃO DERROTADO</div>
+    );
 
-        <div class="subtitle">
-          O Curupira se ajoelha diante da floresta.
-          <br><br>
-          "Você procura o fogo...<br>
-          mas ainda não sabe o que está procurando."
-          <br><br>
-          Uma nova força desperta em sua lanterna.
-        </div>
+}
 
-        <button id="nextLevel">
-          PRÓXIMA FASE
-        </button>
-      </div>
-    `;
 
-    document.getElementById("nextLevel").onclick=()=>{
-      level++;
+/* =========================
+   PLAYER
+========================= */
 
-      if(level>=5){
-        finishWorld();
+function updatePlayer(){
+
+    if(player.dead)
         return;
-      }
 
-      screen.classList.add("hidden");
-      buildLevel();
-    };
 
-  },1000);
-}
+    if(player.invincible>0)
+        player.invincible--;
 
-/* ---------- FINAL DO MUNDO ---------- */
+    if(player.attackCooldown>0)
+        player.attackCooldown--;
 
-function finishWorld(){
+    if(player.dashCooldown>0)
+        player.dashCooldown--;
 
-  screen.innerHTML=`
-    <div class="panel">
 
-      <div class="title">
-        MUNDO 1 COMPLETO
-      </div>
+    /* COMBO */
 
-      <div class="subtitle">
-        Você atravessou a Floresta.
-        <br><br>
-        Mas o fogo que desapareceu não era apenas uma chama.
-        <br><br>
-        Existem outros lugares.
-        Outras lendas.
-        E algo está esperando por você.
-      </div>
+    if(player.comboTimer>0){
 
-      <button onclick="location.reload()">
-        JOGAR NOVAMENTE
-      </button>
+        player.comboTimer--;
 
-    </div>
-  `;
-
-  screen.classList.remove("hidden");
-}
-
-/* ---------- PARTÍCULAS ---------- */
-
-function updateParticles(){
-
-  for(const p of particles){
-
-    p.x+=p.vx;
-    p.y+=p.vy;
-
-    p.vy+=.05;
-
-    p.life--;
-
-  }
-
-  particles=particles.filter(p=>p.life>0);
-}
-
-/* ---------- CÂMERA ---------- */
-
-function updateCamera(){
-
-  const target=
-    player.x-
-    W*.38;
-
-  camera.x +=
-    (target-camera.x)*.09;
-
-  if(camera.x<0) camera.x=0;
-
-  if(camera.x>levelWidth-W){
-    camera.x=levelWidth-W;
-  }
-
-  if(camera.shake>0){
-    camera.shake*=.8;
-
-    if(camera.shake<.2){
-      camera.shake=0;
     }
-  }
-}
+    else{
 
-/* ---------- DESENHO DO FUNDO ---------- */
+        player.combo=0;
 
-function drawBackground(){
-
-  /* céu */
-
-  ctx.fillStyle="#09140f";
-  ctx.fillRect(0,0,W,H);
-
-  /* lua */
-
-  ctx.fillStyle="#d5c98a";
-  ctx.fillRect(730,65,26,26);
-
-  ctx.fillStyle="#09140f";
-  ctx.fillRect(742,60,25,25);
-
-  /* montanhas */
-
-  ctx.fillStyle="#10251b";
-
-  for(let i=0;i<10;i++){
-
-    const x=
-      i*180-
-      camera.x*.12;
-
-    ctx.beginPath();
-    ctx.moveTo(x,390);
-    ctx.lineTo(x+90,180);
-    ctx.lineTo(x+180,390);
-    ctx.fill();
-  }
-
-  /* árvores distantes */
-
-  for(let i=0;i<25;i++){
-
-    const x=
-      i*120-
-      camera.x*.25;
-
-    drawTree(x,310,1.1);
-  }
-
-  /* árvores próximas */
-
-  for(let i=0;i<18;i++){
-
-    const x=
-      i*170-
-      camera.x*.55;
-
-    drawTree(x,370,1.5);
-  }
-}
-
-function drawTree(x,y,s){
-
-  ctx.fillStyle="#101c16";
-  ctx.fillRect(x-8*s,y,16*s,120*s);
-
-  ctx.fillStyle="#13291e";
-
-  ctx.fillRect(
-    x-45*s,
-    y-60*s,
-    90*s,
-    55*s
-  );
-
-  ctx.fillRect(
-    x-32*s,
-    y-90*s,
-    64*s,
-    50*s
-  );
-
-  ctx.fillRect(
-    x-20*s,
-    y-115*s,
-    40*s,
-    40*s
-  );
-}
-
-/* ---------- DESENHO DO MAPA ---------- */
-
-function drawPlatforms(){
-
-  for(const p of platforms){
-
-    ctx.fillStyle="#1c3025";
-    ctx.fillRect(
-      p.x-camera.x,
-      p.y,
-      p.w,
-      p.h
-    );
-
-    ctx.fillStyle="#405c3e";
-    ctx.fillRect(
-      p.x-camera.x,
-      p.y,
-      p.w,
-      6
-    );
-
-    /* pixel grass */
-
-    ctx.fillStyle="#658057";
-
-    for(let x=p.x;x<p.x+p.w;x+=18){
-
-      ctx.fillRect(
-        x-camera.x,
-        p.y-3,
-        7,
-        3
-      );
-    }
-  }
-}
-
-/* ---------- PLAYER ---------- */
-
-function drawPlayer(){
-
-  const x=
-    Math.floor(
-      player.x-camera.x
-    );
-
-  const y=
-    Math.floor(player.y);
-
-  if(
-    player.invincible>0 &&
-    Math.floor(player.invincible/4)%2===0
-  ){
-    return;
-  }
-
-  /* sombra */
-
-  ctx.fillStyle="rgba(0,0,0,.3)";
-  ctx.fillRect(x-3,y+player.h,32,6);
-
-  /* capa */
-
-  ctx.fillStyle="#202c27";
-  ctx.fillRect(x+4,y+15,19,26);
-
-  /* corpo */
-
-  ctx.fillStyle="#33453a";
-  ctx.fillRect(x+6,y+18,15,23);
-
-  /* cabeça */
-
-  ctx.fillStyle="#b87953";
-  ctx.fillRect(x+5,y+3,17,17);
-
-  /* cabelo */
-
-  ctx.fillStyle="#241c18";
-  ctx.fillRect(x+4,y+1,20,8);
-  ctx.fillRect(x+2,y+6,6,9);
-
-  /* olho */
-
-  ctx.fillStyle="#f2f0d2";
-  ctx.fillRect(
-    x+(player.facing>0?18:7),
-    y+9,
-    3,
-    3
-  );
-
-  /* pernas */
-
-  ctx.fillStyle="#252c27";
-
-  ctx.fillRect(x+6,y+39,7,7);
-  ctx.fillRect(x+16,y+39,7,7);
-
-  /* espada */
-
-  ctx.save();
-
-  ctx.translate(
-    x+13,
-    y+26
-  );
-
-  if(player.facing<0){
-    ctx.scale(-1,1);
-  }
-
-  ctx.fillStyle="#c9c5b0";
-
-  if(player.attacking){
-
-    ctx.rotate(-.5);
-
-    ctx.fillRect(
-      8,-22,
-      34,
-      5
-    );
-
-    ctx.fillStyle="#fff1ad";
-
-    ctx.fillRect(
-      35,-25,
-      8,
-      11
-    );
-
-  }else{
-
-    ctx.fillRect(
-      7,-3,
-      27,
-      4
-    );
-  }
-
-  ctx.restore();
-}
-
-/* ---------- INIMIGOS ---------- */
-
-function drawEnemies(){
-
-  for(const e of enemies){
-
-    const x=
-      Math.floor(e.x-camera.x);
-
-    const y=
-      Math.floor(e.y);
-
-    if(e.hitTimer%2===1){
-      ctx.globalAlpha=.55;
     }
 
-    if(e.type==="boar"){
-      drawBoar(x,y);
+
+    /* MOVIMENTO */
+
+    let direction=0;
+
+    if(
+        keys["arrowleft"] ||
+        keys["a"]
+    ){
+
+        direction=-1;
+
     }
 
-    if(e.type==="owl"){
-      drawOwl(x,y);
+    if(
+        keys["arrowright"] ||
+        keys["d"]
+    ){
+
+        direction=1;
+
     }
 
-    if(e.type==="guardian"){
-      drawGuardian(x,y);
+
+    if(direction!==0){
+
+        player.vx +=
+            direction*.65;
+
+        if(
+            Math.abs(player.vx)>
+            player.speed
+        ){
+
+            player.vx =
+                direction*
+                player.speed;
+        }
+
+        player.facing =
+            direction;
+
+    }
+    else{
+
+        player.vx*=.78;
+
     }
 
-    if(e.type==="spirit"){
-      drawSpirit(x,y);
+
+    /* PULO */
+
+    if(
+        (
+            keys["arrowup"] ||
+            keys["w"] ||
+            keys[" "]
+        ) &&
+        player.grounded
+    ){
+
+        player.vy =
+            -player.jumpPower;
+
+        player.grounded=false;
+
+        soundJump();
+
+        for(
+            let i=0;
+            i<7;
+            i++
+        ){
+
+            createParticle(
+                player.x+14,
+                player.y+45,
+                "#8da987",
+                3,
+                (Math.random()-.5)*2,
+                -Math.random()*2
+            );
+
+        }
+
     }
 
-    ctx.globalAlpha=1;
-  }
+
+    /* ATAQUE */
+
+    if(
+        (
+            keys["z"] ||
+            keys["j"]
+        ) &&
+        player.attackCooldown<=0
+    ){
+
+        player.attacking=true;
+
+        player.attackTimer=10;
+
+        player.attackCooldown=18;
+
+        player.combo++;
+
+        player.comboTimer=50;
+
+        soundAttack();
+
+    }
+
+
+    if(player.attackTimer>0){
+
+        player.attackTimer--;
+
+    }
+    else{
+
+        player.attacking=false;
+
+    }
+
+
+    /* DASH */
+
+    if(
+        keys["x"] &&
+        player.dashCooldown<=0
+    ){
+
+        player.dashCooldown=55;
+
+        player.dashTimer=10;
+
+        player.vx =
+            player.facing*11;
+
+        player.invincible=20;
+
+        soundDash();
+
+        for(
+            let i=0;
+            i<12;
+            i++
+        ){
+
+            createParticle(
+                player.x,
+                player.y+22,
+                "#8cb99a",
+                3,
+                -player.facing*
+                Math.random()*3,
+                (Math.random()-.5)*2,
+                20
+            );
+
+        }
+
+    }
+
+
+    if(player.dashTimer>0){
+
+        player.dashTimer--;
+
+        player.vx =
+            player.facing*11;
+
+    }
+
+
+    /* GRAVIDADE */
+
+    player.vy+=.5;
+
+    if(player.vy>14)
+        player.vy=14;
+
+
+    player.x+=player.vx;
+    player.y+=player.vy;
+
+    player.grounded=false;
+
+
+    /* PLATAFORMAS */
+
+    for(
+        const platform of platforms
+    ){
+
+        if(
+
+            player.x+player.width >
+            platform.x &&
+
+            player.x <
+            platform.x+
+            platform.width &&
+
+            player.y+
+            player.height >=
+            platform.y &&
+
+            player.y+
+            player.height <=
+            platform.y+
+            player.vy+
+            6 &&
+
+            player.vy>=0
+
+        ){
+
+            player.y =
+                platform.y-
+                player.height;
+
+            player.vy=0;
+
+            player.grounded=true;
+
+        }
+
+    }
+
+
+    /* LIMITES */
+
+    if(player.x<0)
+        player.x=0;
+
+    if(
+        player.x>
+        worldWidth-
+        player.width
+    ){
+
+        player.x=
+            worldWidth-
+            player.width;
+    }
+
+
+    /* QUEDA */
+
+    if(player.y>650){
+
+        damagePlayer(999);
+
+    }
+
+
+    /* ATAQUE */
+
+    if(player.attacking){
+
+        const hitbox={
+
+            x:
+                player.facing>0
+                ?player.x+player.width
+                :player.x-48,
+
+            y:
+                player.y+6,
+
+            width:48,
+            height:38
+
+        };
+
+
+        for(
+            const enemy of enemies
+        ){
+
+            if(enemy.dead)
+                continue;
+
+            if(
+                collision(
+                    hitbox,
+                    enemy
+                )
+            ){
+
+                hitEnemy(enemy);
+
+            }
+
+        }
+
+
+        if(
+            boss &&
+            boss.active &&
+            !boss.defeated &&
+            collision(
+                hitbox,
+                boss
+            )
+        ){
+
+            hitBoss();
+
+        }
+
+    }
+
 }
 
-function drawBoar(x,y){
 
-  ctx.fillStyle="#5d4937";
-  ctx.fillRect(x,y+8,36,22);
+/* =========================
+   ATINGIR INIMIGO
+========================= */
 
-  ctx.fillStyle="#765c42";
-  ctx.fillRect(x+22,y+2,16,22);
+function hitEnemy(enemy){
 
-  ctx.fillStyle="#15120f";
-  ctx.fillRect(x+32,y+7,4,4);
+    const damage =
+        12+
+        player.combo*2;
 
-  ctx.fillStyle="#2a2018";
-  ctx.fillRect(x+5,y+28,7,7);
-  ctx.fillRect(x+26,y+28,7,7);
+    enemy.hp-=damage;
 
-  ctx.fillStyle="#d5d1b3";
-  ctx.fillRect(x+35,y+16,6,3);
+    enemy.hitTimer=8;
+
+    enemy.vx =
+        player.facing*4;
+
+    camera.shake=5;
+
+
+    for(
+        let i=0;
+        i<8;
+        i++
+    ){
+
+        createParticle(
+            enemy.x+
+            enemy.width/2,
+
+            enemy.y+
+            enemy.height/2,
+
+            "#e7c36b",
+
+            3,
+
+            (Math.random()-.5)*4,
+
+            (Math.random()-.5)*4
+        );
+
+    }
+
+
+    if(enemy.hp<=0){
+
+        enemy.dead=true;
+
+        player.coins++;
+
+        soundCoin();
+
+    }
+
 }
 
-function drawOwl(x,y){
 
-  ctx.fillStyle="#4d604c";
-  ctx.fillRect(x+5,y+4,25,20);
+/* =========================
+   DANO
+========================= */
 
-  ctx.fillStyle="#263528";
-  ctx.fillRect(x,y+10,10,15);
-  ctx.fillRect(x+25,y+10,10,15);
+function damagePlayer(amount){
 
-  ctx.fillStyle="#e6dfae";
-  ctx.fillRect(x+8,y+8,7,7);
-  ctx.fillRect(x+20,y+8,7,7);
+    if(
+        player.invincible>0 ||
+        player.dead
+    )
+        return;
 
-  ctx.fillStyle="#171814";
-  ctx.fillRect(x+11,y+10,3,3);
-  ctx.fillRect(x+22,y+10,3,3);
 
-  ctx.fillStyle="#b58b4d";
-  ctx.fillRect(x+16,y+15,5,5);
+    player.health-=amount;
+
+    player.invincible=55;
+
+    soundHit();
+
+    camera.shake=10;
+
+
+    if(player.health<=0){
+
+        player.health=0;
+
+        player.dead=true;
+
+        setTimeout(()=>{
+
+            player.dead=false;
+
+            player.x=
+                player.checkpointX;
+
+            player.y=
+                player.checkpointY;
+
+            player.vx=0;
+            player.vy=0;
+
+            player.health=
+                player.maxHealth;
+
+            player.invincible=60;
+
+        },700);
+
+    }
+
+    updateHUD();
+
 }
 
-function drawGuardian(x,y){
 
-  ctx.fillStyle="#27372d";
-  ctx.fillRect(x+3,y,30,30);
-
-  ctx.fillStyle="#536b53";
-  ctx.fillRect(x+7,y+4,22,12);
-
-  ctx.fillStyle="#d1bd71";
-  ctx.fillRect(x+10,y+9,4,4);
-  ctx.fillRect(x+22,y+9,4,4);
-
-  ctx.fillStyle="#172019";
-  ctx.fillRect(x,y+30,10,7);
-  ctx.fillRect(x+25,y+30,10,7);
-}
-
-function drawSpirit(x,y){
-
-  ctx.fillStyle="rgba(119,175,137,.75)";
-  ctx.fillRect(x+5,y+5,25,30);
-
-  ctx.fillStyle="#d9ebd0";
-  ctx.fillRect(x+10,y+12,5,5);
-  ctx.fillRect(x+21,y+12,5,5);
-
-  ctx.fillStyle="#173025";
-  ctx.fillRect(x+12,y+25,13,3);
-}
-
-/* ---------- COLETÁVEIS ---------- */
-
-function drawCollectibles(){
-
-  for(const c of collectibles){
-
-    if(c.taken) continue;
-
-    const x=c.x-camera.x;
-    const pulse=
-      Math.sin(performance.now()/200+c.x)*3;
-
-    ctx.fillStyle="#d9bd59";
-
-    ctx.fillRect(
-      x-4,
-      c.y-5+pulse,
-      8,
-      8
-    );
-
-    ctx.fillStyle="#fff1a4";
-
-    ctx.fillRect(
-      x-1,
-      c.y-8+pulse,
-      3,
-      3
-    );
-  }
-}
-
-/* ---------- BOSS DRAW ---------- */
-
-function drawBoss(){
-
-  if(!boss || boss.defeated) return;
-
-  const x=
-    Math.floor(boss.x-camera.x);
-
-  const y=
-    Math.floor(boss.y);
-
-  /* aura */
-
-  ctx.fillStyle=
-    boss.phase===1
-      ? "rgba(70,130,75,.12)"
-      : boss.phase===2
-      ? "rgba(190,135,45,.16)"
-      : "rgba(210,55,55,.18)";
-
-  ctx.fillRect(
-    x-20,
-    y-20,
-    boss.w+40,
-    boss.h+40
-  );
-
-  /* corpo */
-
-  ctx.fillStyle=
-    boss.phase===1
-      ? "#31563a"
-      : boss.phase===2
-      ? "#8b682e"
-      : "#8f302f";
-
-  ctx.fillRect(
-    x+15,
-    y+30,
-    60,
-    75
-  );
-
-  /* cabeça */
-
-  ctx.fillStyle="#a45e42";
-
-  ctx.fillRect(
-    x+20,
-    y+10,
-    50,
-    45
-  );
-
-  /* cabelo */
-
-  ctx.fillStyle="#30251a";
-
-  ctx.fillRect(
-    x+12,
-    y,
-    66,
-    17
-  );
-
-  ctx.fillRect(
-    x+5,
-    y+10,
-    15,
-    45
-  );
-
-  ctx.fillRect(
-    x+70,
-    y+10,
-    15,
-    45
-  );
-
-  /* olhos */
-
-  ctx.fillStyle="#e4d46d";
-
-  ctx.fillRect(x+30,y+27,7,7);
-  ctx.fillRect(x+53,y+27,7,7);
-
-  /* pernas */
-
-  ctx.fillStyle="#243228";
-
-  ctx.fillRect(x+20,y+100,18,20);
-  ctx.fillRect(x+52,y+100,18,20);
-
-  /* barra */
-
-  const barW=120;
-
-  ctx.fillStyle="#211616";
-  ctx.fillRect(x-15,y-35,barW,10);
-
-  ctx.fillStyle="#c64040";
-
-  ctx.fillRect(
-    x-15,
-    y-35,
-    barW*(boss.hp/boss.maxHp),
-    10
-  );
-
-  ctx.strokeStyle="#fff";
-  ctx.strokeRect(x-15,y-35,barW,10);
-}
-
-/* ---------- PROJÉTEIS ---------- */
-
-function drawProjectiles(){
-
-  for(const p of projectiles){
-
-    const x=p.x-camera.x;
-
-    ctx.fillStyle="#e5b64f";
-
-    ctx.fillRect(
-      x,
-      p.y,
-      p.size,
-      p.size
-    );
-
-    ctx.fillStyle="#fff0a0";
-
-    ctx.fillRect(
-      x+2,
-      p.y+2,
-      3,
-      3
-    );
-  }
-}
-
-/* ---------- PARTÍCULAS ---------- */
-
-function drawParticles(){
-
-  for(const p of particles){
-
-    const alpha=
-      p.life/p.maxLife;
-
-    ctx.globalAlpha=alpha;
-
-    ctx.fillStyle=p.color;
-
-    ctx.fillRect(
-      Math.floor(p.x-camera.x),
-      Math.floor(p.y),
-      p.size,
-      p.size
-    );
-  }
-
-  ctx.globalAlpha=1;
-}
-
-/* ---------- HUD ---------- */
+/* =========================
+   HUD
+========================= */
 
 function updateHUD(){
 
-  healthBar.style.width=
-    Math.max(
-      0,
-      player.health/player.maxHealth*100
-    )+"%";
+    healthBar.style.width =
+        Math.max(
+            0,
+            player.health/
+            player.maxHealth*
+            100
+        )+"%";
 
-  coinsText.textContent=
-    "✦ "+player.coins;
+    coinsText.textContent =
+        "✦ "+
+        player.coins;
+
+    if(
+        boss &&
+        !boss.defeated
+    ){
+
+        bossHealth.style.width =
+            Math.max(
+                0,
+                boss.hp/
+                boss.maxHp*
+                100
+            )+"%";
+
+    }
+
 }
 
-/* ---------- MENSAGENS ---------- */
+
+/* =========================
+   MENSAGEM
+========================= */
 
 let messageTimer=null;
 
 function showMessage(text){
 
-  message.textContent=text;
-  message.style.display="block";
+    messageBox.textContent=text;
 
-  clearTimeout(messageTimer);
+    messageBox.style.display=
+        "block";
 
-  messageTimer=setTimeout(()=>{
-    message.style.display="none";
-  },3500);
+    clearTimeout(messageTimer);
+
+    messageTimer =
+        setTimeout(()=>{
+
+            messageBox.style.display=
+                "none";
+
+        },3500);
+
+}
+  /* =========================
+   INIMIGOS
+========================= */
+
+function updateEnemies(){
+
+    for(const enemy of enemies){
+
+        if(enemy.dead)
+            continue;
+
+        if(enemy.hitTimer>0)
+            enemy.hitTimer--;
+
+
+        if(enemy.type==="boar"){
+
+            updateBoar(enemy);
+
+        }
+        else if(enemy.type==="owl"){
+
+            updateOwl(enemy);
+
+        }
+        else if(enemy.type==="guardian"){
+
+            updateGuardian(enemy);
+
+        }
+        else if(enemy.type==="spirit"){
+
+            updateSpirit(enemy);
+
+        }
+
+
+        /* DANO AO PLAYER */
+
+        if(
+            collision(player,enemy) &&
+            player.invincible<=0
+        ){
+
+            damagePlayer(
+                enemy.type==="guardian"
+                ?18
+                :enemy.type==="spirit"
+                ?15
+                :12
+            );
+
+            player.vx =
+                player.x<enemy.x
+                ?-5
+                :5;
+
+            player.vy=-5;
+
+        }
+
+    }
+
+
+    enemies =
+        enemies.filter(
+            enemy=>!enemy.dead
+        );
+
 }
 
-/* ---------- INTRO ---------- */
 
-function intro(){
+/* =========================
+   JAVALI
+========================= */
 
-  setTimeout(()=>{
+function updateBoar(enemy){
+
+    const distance =
+        player.x-enemy.x;
+
+
+    if(
+        Math.abs(distance)<330
+    ){
+
+        enemy.direction =
+            distance>0
+            ?1
+            :-1;
+
+        enemy.vx =
+            enemy.direction*1.8;
+
+    }
+    else{
+
+        enemy.vx =
+            enemy.direction*0.8;
+
+    }
+
+
+    enemy.x+=enemy.vx;
+
+
+    if(enemy.x<0){
+
+        enemy.x=0;
+        enemy.direction=1;
+
+    }
+
+
+    if(
+        enemy.x>
+        worldWidth-
+        enemy.width
+    ){
+
+        enemy.x=
+            worldWidth-
+            enemy.width;
+
+        enemy.direction=-1;
+
+    }
+
+
+    enemy.y=450;
+
+}
+
+
+/* =========================
+   CORUJA
+========================= */
+
+function updateOwl(enemy){
+
+    const distance =
+        player.x-enemy.x;
+
+
+    if(
+        Math.abs(distance)<500
+    ){
+
+        enemy.x +=
+            distance*.012;
+
+    }
+
+
+    enemy.y +=
+        Math.sin(
+            performance.now()/250+
+            enemy.x
+        )*.8;
+
+
+    if(
+        collision(player,enemy) &&
+        player.invincible<=0
+    ){
+
+        damagePlayer(12);
+
+    }
+
+}
+
+
+/* =========================
+   GUARDIÃO
+========================= */
+
+function updateGuardian(enemy){
+
+    const distance =
+        player.x-enemy.x;
+
+
+    if(
+        Math.abs(distance)<360
+    ){
+
+        enemy.direction =
+            distance>0
+            ?1
+            :-1;
+
+        enemy.vx =
+            enemy.direction*1.1;
+
+    }
+    else{
+
+        enemy.vx =
+            enemy.direction*.55;
+
+    }
+
+
+    enemy.x+=enemy.vx;
+
+    enemy.y=450;
+
+
+    if(enemy.x<0){
+
+        enemy.x=0;
+        enemy.direction=1;
+
+    }
+
+
+    if(
+        enemy.x>
+        worldWidth-
+        enemy.width
+    ){
+
+        enemy.x=
+            worldWidth-
+            enemy.width;
+
+        enemy.direction=-1;
+
+    }
+
+}
+
+
+/* =========================
+   ESPÍRITO DA MATA
+========================= */
+
+function updateSpirit(enemy){
+
+    const distance =
+        player.x-enemy.x;
+
+
+    if(
+        Math.abs(distance)<500
+    ){
+
+        enemy.x +=
+            distance*.006;
+
+    }
+
+
+    enemy.y =
+        420+
+        Math.sin(
+            performance.now()/280+
+            enemy.x
+        )*30;
+
+}
+
+
+/* =========================
+   COLETÁVEIS
+========================= */
+
+function updateCollectibles(){
+
+    for(
+        const collectible
+        of collectibles
+    ){
+
+        if(
+            collectible.collected
+        )
+            continue;
+
+
+        const distanceX =
+            Math.abs(
+                player.x-
+                collectible.x
+            );
+
+        const distanceY =
+            Math.abs(
+                player.y-
+                collectible.y
+            );
+
+
+        if(
+            distanceX<28 &&
+            distanceY<45
+        ){
+
+            collectible.collected=true;
+
+            player.coins++;
+
+            soundCoin();
+
+
+            for(
+                let i=0;
+                i<12;
+                i++
+            ){
+
+                createParticle(
+
+                    collectible.x,
+
+                    collectible.y,
+
+                    "#e1c35d",
+
+                    3,
+
+                    (Math.random()-.5)*4,
+
+                    (Math.random()-.5)*4
+
+                );
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =========================
+   CHECKPOINT
+========================= */
+
+function updateCheckpoint(){
+
+    const checkpoint =
+        worldWidth*.48;
+
+
+    if(
+        player.x>checkpoint &&
+        player.checkpointX<
+        checkpoint
+    ){
+
+        player.checkpointX=
+            checkpoint;
+
+        player.checkpointY=
+            350;
+
+
+        showMessage(
+            "Ponto de descanso encontrado."
+        );
+
+
+        for(
+            let i=0;
+            i<20;
+            i++
+        ){
+
+            createParticle(
+
+                checkpoint,
+
+                400,
+
+                "#d6b75c",
+
+                3,
+
+                (Math.random()-.5)*3,
+
+                -Math.random()*3
+
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================
+   BOSS CURUPIRA
+========================= */
+
+function updateBoss(){
+
+    if(
+        !boss ||
+        boss.defeated
+    )
+        return;
+
+
+    /* ATIVA O BOSS */
+
+    if(
+        player.x>
+        boss.x-700
+    ){
+
+        if(!boss.active){
+
+            boss.active=true;
+
+            showMessage(
+                "CURUPIRA: Você não deveria estar aqui."
+            );
+
+        }
+
+    }
+
+
+    if(!boss.active)
+        return;
+
+
+    if(boss.hitTimer>0)
+        boss.hitTimer--;
+
+
+    /* FASE DO BOSS */
+
+    const healthPercent =
+        boss.hp/
+        boss.maxHp;
+
+
+    if(
+        healthPercent>.66
+    ){
+
+        boss.phase=1;
+
+    }
+    else if(
+        healthPercent>.33
+    ){
+
+        boss.phase=2;
+
+    }
+    else{
+
+        boss.phase=3;
+
+    }
+
+
+    /* MOVIMENTO */
+
+    const distance =
+        player.x-boss.x;
+
+
+    const speed =
+        boss.phase===1
+        ?0.8
+        :boss.phase===2
+        ?1.2
+        :1.7;
+
+
+    if(
+        Math.abs(distance)>80
+    ){
+
+        boss.x +=
+            Math.sign(distance)*
+            speed;
+
+    }
+
+
+    boss.y=350;
+
+
+    /* ATAQUE */
+
+    boss.attackTimer--;
+
+
+    if(
+        boss.attackTimer<=0
+    ){
+
+        boss.attackTimer =
+            boss.phase===1
+            ?100
+            :boss.phase===2
+            ?72
+            :50;
+
+
+        bossAttack();
+
+    }
+
+
+    /* CONTATO */
+
+    if(
+        collision(player,boss) &&
+        player.invincible<=0
+    ){
+
+        damagePlayer(
+            boss.phase===1
+            ?18
+            :boss.phase===2
+            ?24
+            :30
+        );
+
+    }
+
+
+    updateHUD();
+
+}
+
+
+/* =========================
+   ATAQUE DO CURUPIRA
+========================= */
+
+function bossAttack(){
+
+    const amount =
+        boss.phase===1
+        ?2
+        :boss.phase===2
+        ?4
+        :6;
+
+
+    for(
+        let i=0;
+        i<amount;
+        i++
+    ){
+
+        setTimeout(()=>{
+
+            if(
+                !boss ||
+                boss.defeated
+            )
+                return;
+
+
+            const angle =
+                Math.atan2(
+
+                    player.y-
+                    boss.y,
+
+                    player.x-
+                    boss.x
+
+                )+
+                (i-
+                amount/2)*
+                .16;
+
+
+            const speed =
+                boss.phase===3
+                ?5.5
+                :4;
+
+
+            projectiles.push({
+
+                x:
+                    boss.x+
+                    boss.width/2,
+
+                y:
+                    boss.y+45,
+
+                vx:
+                    Math.cos(angle)*
+                    speed,
+
+                vy:
+                    Math.sin(angle)*
+                    speed,
+
+                size:
+                    boss.phase===3
+                    ?9
+                    :7,
+
+                life:160,
+
+                dead:false
+
+            });
+
+
+        },i*100);
+
+    }
+
+
+    camera.shake=6;
+
+}
+
+
+/* =========================
+   ATINGIR BOSS
+========================= */
+
+function hitBoss(){
+
+    if(
+        boss.hitTimer>0
+    )
+        return;
+
+
+    const damage =
+        8+
+        player.combo*2;
+
+
+    boss.hp-=damage;
+
+    boss.hitTimer=12;
+
+    camera.shake=8;
+
+
+    soundHit();
+
+
+    for(
+        let i=0;
+        i<15;
+        i++
+    ){
+
+        createParticle(
+
+            boss.x+
+            boss.width/2,
+
+            boss.y+
+            boss.height/2,
+
+            boss.phase===3
+            ?"#df5548"
+            :"#e2b657",
+
+            4,
+
+            (Math.random()-.5)*5,
+
+            (Math.random()-.5)*5
+
+        );
+
+    }
+
+
+    if(
+        boss.hp<=0
+    ){
+
+        boss.hp=0;
+
+        defeatBoss();
+
+    }
+
+
+    updateHUD();
+
+}
+
+
+/* =========================
+   PROJÉTEIS
+========================= */
+
+function updateProjectiles(){
+
+    for(
+        const projectile
+        of projectiles
+    ){
+
+        projectile.x +=
+            projectile.vx;
+
+        projectile.y +=
+            projectile.vy;
+
+        projectile.life--;
+
+
+        if(
+            projectile.life<=0
+        ){
+
+            projectile.dead=true;
+
+            continue;
+
+        }
+
+
+        /* COLISÃO COM PLAYER */
+
+        if(
+
+            projectile.x<
+            player.x+
+            player.width &&
+
+            projectile.x+
+            projectile.size>
+            player.x &&
+
+            projectile.y<
+            player.y+
+            player.height &&
+
+            projectile.y+
+            projectile.size>
+            player.y
+
+        ){
+
+            damagePlayer(
+                boss &&
+                boss.phase===3
+                ?20
+                :12
+            );
+
+            projectile.dead=true;
+
+        }
+
+    }
+
+
+    projectiles =
+        projectiles.filter(
+            p=>!p.dead
+        );
+
+}
+
+
+/* =========================
+   DERROTA DO CURUPIRA
+========================= */
+
+function defeatBoss(){
+
+    boss.defeated=true;
+
+    projectiles=[];
+
+
+    player.coins+=50;
+
+
     showMessage(
-      "Minha avó dizia que a floresta era viva..."
+        "CURUPIRA DERROTADO!"
     );
-  },1000);
 
-  setTimeout(()=>{
-    showMessage(
-      "Eu achava que era só uma história."
-    );
-  },4500);
 
-  setTimeout(()=>{
-    showMessage(
-      "...até hoje."
-    );
-  },8000);
+    setTimeout(()=>{
+
+        showBossVictory();
+
+    },1300);
+
 }
 
-/* ---------- DESENHO ---------- */
 
-function draw(){
+/* =========================
+   VITÓRIA DO BOSS
+========================= */
 
-  ctx.save();
+function showBossVictory(){
 
-  const shakeX=
-    camera.shake?
-    (Math.random()-.5)*camera.shake:
-    0;
+    menu.innerHTML=`
 
-  const shakeY=
-    camera.shake?
-    (Math.random()-.5)*camera.shake:
-    0;
+        <div class="panel">
 
-  ctx.translate(shakeX,shakeY);
+            <div class="title">
+                GUARDIÃO DERROTADO
+            </div>
 
-  drawBackground();
-  drawPlatforms();
-  drawCollectibles();
-  drawEnemies();
-  drawBoss();
-  drawProjectiles();
-  drawPlayer();
-  drawParticles();
+            <div class="subtitle">
 
-  ctx.restore();
+                O Curupira permanece em silêncio.
+
+                <br><br>
+
+                "Você procura o fogo..."
+
+                <br>
+
+                "Mas ainda não sabe
+                o que está procurando."
+
+                <br><br>
+
+                A lanterna de Caio
+                começa a brilhar.
+
+                <br><br>
+
+                <strong>
+                HABILIDADE DESBLOQUEADA:
+                PASSOS DA MATA
+                </strong>
+
+                <br><br>
+
+                Agora caminhos ocultos,
+                pegadas e passagens secretas
+                podem ser revelados.
+
+            </div>
+
+            <button id="continueButton">
+                CONTINUAR
+            </button>
+
+        </div>
+
+    `;
+
+
+    menu.classList.remove(
+        "hidden"
+    );
+
+
+    document
+        .getElementById(
+            "continueButton"
+        )
+        .onclick=()=>{
+
+            player.forestSteps=true;
+
+            currentStage++;
+
+
+            if(
+                currentStage>=5
+            ){
+
+                finishWorld();
+
+                return;
+
+            }
+
+
+            menu.classList.add(
+                "hidden"
+            );
+
+
+            buildStage();
+
+
+            showMessage(
+                "PASSOS DA MATA desbloqueado!"
+            );
+
+        };
+
 }
 
-/* ---------- ATUALIZAÇÃO ---------- */
 
-function update(){
+/* =========================
+   FIM DO MUNDO
+========================= */
 
-  updatePlayer();
-  updateEnemies();
-  updateBoss();
-  updateProjectiles();
-  updateCollectibles();
-  updateCheckpoint();
-  updateParticles();
-  updateCamera();
+function finishWorld(){
 
-  updateHUD();
+    menu.innerHTML=`
+
+        <div class="panel">
+
+            <div class="title">
+                FLORESTA CONCLUÍDA
+            </div>
+
+            <div class="subtitle">
+
+                Caio atravessou
+                a Floresta Perdida.
+
+                <br><br>
+
+                Mas o Curupira estava
+                protegendo algo muito maior.
+
+                <br><br>
+
+                A chama antiga
+                ainda existe.
+
+                <br><br>
+
+                E agora Caio sabe
+                que existem outras lendas
+                espalhadas pelo mundo.
+
+                <br><br>
+
+                <strong>
+                PRÓXIMO DESTINO:
+                VILA DO SACI
+                </strong>
+
+            </div>
+
+            <button id="restart">
+                JOGAR NOVAMENTE
+            </button>
+
+        </div>
+
+    `;
+
+
+    menu.classList.remove(
+        "hidden"
+    );
+
+
+    document
+        .getElementById("restart")
+        .onclick=()=>{
+
+            location.reload();
+
+        };
+
 }
 
-/* ---------- LOOP ---------- */
 
-function loop(){
+/* =========================
+   PARTÍCULAS
+========================= */
 
-  if(!screen.classList.contains("hidden")){
-    draw();
-    requestAnimationFrame(loop);
-    return;
+function updateParticles(){
+
+    for(
+        const particle
+        of particles
+    ){
+
+        particle.x +=
+            particle.vx;
+
+        particle.y +=
+            particle.vy;
+
+        particle.vy +=
+            .05;
+
+        particle.life--;
+
+    }
+
+
+    particles =
+        particles.filter(
+            p=>p.life>0
+        );
+
+}
+
+
+/* =========================
+   CÂMERA
+========================= */
+
+function updateCamera(){
+
+    const target =
+        player.x-
+        WIDTH*.38;
+
+
+    camera.x +=
+        (
+            target-
+            camera.x
+        )*.09;
+
+
+    if(
+        camera.x<0
+    ){
+
+        camera.x=0;
+
+    }
+
+
+    if(
+        camera.x>
+        worldWidth-
+        WIDTH
+    ){
+
+        camera.x=
+            worldWidth-
+            WIDTH;
+
+    }
+
+
+    if(
+        camera.shake>0
+    ){
+
+        camera.shake*=.8;
+
+
+        if(
+            camera.shake<.2
+        ){
+
+            camera.shake=0;
+
+        }
+
+    }
+
+}
+
+
+/* =========================
+   FUNDO
+========================= */
+
+function drawBackground(){
+
+    /* CÉU */
+
+    ctx.fillStyle=
+        "#07120d";
+
+    ctx.fillRect(
+        0,
+        0,
+        WIDTH,
+        HEIGHT
+    );
+
+
+    /* LUA */
+
+    ctx.fillStyle=
+        "#d7cb91";
+
+    ctx.fillRect(
+        735,
+        62,
+        28,
+        28
+    );
+
+
+    ctx.fillStyle=
+        "#07120d";
+
+    ctx.fillRect(
+        748,
+        57,
+        25,
+        25
+    );
+
+
+    /* MONTANHAS */
+
+    ctx.fillStyle=
+        "#0e2117";
+
+
+    for(
+        let i=0;
+        i<12;
+        i++
+    ){
+
+        const x =
+            i*180-
+            camera.x*.12;
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x,
+            410
+        );
+
+        ctx.lineTo(
+            x+90,
+            180
+        );
+
+        ctx.lineTo(
+            x+180,
+            410
+        );
+
+        ctx.fill();
+
+    }
+
+
+    /* FLORESTA DISTANTE */
+
+    for(
+        let i=0;
+        i<28;
+        i++
+    ){
+
+        drawTree(
+
+            i*115-
+            camera.x*.25,
+
+            300,
+
+            1.1
+
+        );
+
+    }
+
+
+    /* FLORESTA PRÓXIMA */
+
+    for(
+        let i=0;
+        i<18;
+        i++
+    ){
+
+        drawTree(
+
+            i*175-
+            camera.x*.55,
+
+            370,
+
+            1.45
+
+        );
+
+    }
+
+}
+
+
+/* =========================
+   ÁRVORE
+========================= */
+
+function drawTree(
+    x,
+    y,
+    scale
+){
+
+    ctx.fillStyle=
+        "#111d16";
+
+    ctx.fillRect(
+
+        x-8*scale,
+
+        y,
+
+        16*scale,
+
+        125*scale
+
+    );
+
+
+    ctx.fillStyle=
+        "#142b1d";
+
+
+    ctx.fillRect(
+
+        x-45*scale,
+
+        y-60*scale,
+
+        90*scale,
+
+        55*scale
+
+    );
+
+
+    ctx.fillRect(
+
+        x-32*scale,
+
+        y-90*scale,
+
+        64*scale,
+
+        50*scale
+
+    );
+
+
+    ctx.fillRect(
+
+        x-20*scale,
+
+        y-115*scale,
+
+        40*scale,
+
+        40*scale
+
+    );
+
+}
+
+
+/* =========================
+   PLATAFORMAS
+========================= */
+
+function drawPlatforms(){
+
+    for(
+        const platform
+        of platforms
+    ){
+
+        const x =
+            platform.x-
+            camera.x;
+
+
+        ctx.fillStyle=
+            "#1b3024";
+
+        ctx.fillRect(
+
+            x,
+
+            platform.y,
+
+            platform.width,
+
+            platform.height
+
+        );
+
+
+        ctx.fillStyle=
+            "#4b6745";
+
+        ctx.fillRect(
+
+            x,
+
+            platform.y,
+
+            platform.width,
+
+            7
+
+        );
+
+
+        /* GRAMA PIXELADA */
+
+        ctx.fillStyle=
+            "#718a5c";
+
+
+        for(
+            let grass=
+                platform.x;
+
+            grass<
+                platform.x+
+                platform.width;
+
+            grass+=18
+        ){
+
+            ctx.fillRect(
+
+                grass-
+                camera.x,
+
+                platform.y-3,
+
+                7,
+
+                3
+
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================
+   COLETÁVEIS
+========================= */
+
+function drawCollectibles(){
+
+    for(
+        const collectible
+        of collectibles
+    ){
+
+        if(
+            collectible.collected
+        )
+            continue;
+
+
+        const x =
+            collectible.x-
+            camera.x;
+
+
+        const pulse =
+            Math.sin(
+                performance.now()/200+
+                collectible.x
+            )*3;
+
+
+        ctx.fillStyle=
+            "#d8ba55";
+
+
+        ctx.fillRect(
+
+            x-4,
+
+            collectible.y+
+            pulse-4,
+
+            8,
+
+            8
+
+        );
+
+
+        ctx.fillStyle=
+            "#fff0a0";
+
+
+        ctx.fillRect(
+
+            x-1,
+
+            collectible.y+
+            pulse-7,
+
+            3,
+
+            3
+
+        );
+
+    }
+
+}
+
+
+/* =========================
+   PLAYER VISUAL
+========================= */
+
+function drawPlayer(){
+
+    const x =
+        Math.floor(
+            player.x-
+            camera.x
+        );
+
+    const y =
+        Math.floor(
+            player.y
+        );
+
+
+    if(
+        player.invincible>0 &&
+        Math.floor(
+            player.invincible/4
+        )%2===0
+    ){
+
+        return;
+
+    }
+
+
+    /* SOMBRA */
+
+    ctx.fillStyle=
+        "rgba(0,0,0,.35)";
+
+    ctx.fillRect(
+        x-4,
+        y+player.height,
+        36,
+        6
+    );
+
+
+    /* CAPUZ/CAPA */
+
+    ctx.fillStyle=
+        "#202d27";
+
+    ctx.fillRect(
+        x+3,
+        y+14,
+        22,
+        27
+    );
+
+
+    /* CORPO */
+
+    ctx.fillStyle=
+        "#34463a";
+
+    ctx.fillRect(
+        x+7,
+        y+18,
+        15,
+        23
+    );
+
+
+    /* ROSTO */
+
+    ctx.fillStyle=
+        "#b87953";
+
+    ctx.fillRect(
+        x+5,
+        y+3,
+        18,
+        17
+    );
+
+
+    /* CABELO */
+
+    ctx.fillStyle=
+        "#211b17";
+
+    ctx.fillRect(
+        x+4,
+        y+1,
+        20,
+        8
+    );
+
+    ctx.fillRect(
+        x+2,
+        y+6,
+        6,
+        10
+    );
+
+
+    /* OLHO */
+
+    ctx.fillStyle=
+        "#f5f0c9";
+
+
+    ctx.fillRect(
+
+        x+
+        (
+            player.facing>0
+            ?18
+            :7
+        ),
+
+        y+9,
+
+        3,
+
+        3
+
+    );
+
+
+    /* PERNAS */
+
+    ctx.fillStyle=
+        "#252d28";
+
+    ctx.fillRect(
+        x+6,
+        y+39,
+        7,
+        7
+    );
+
+    ctx.fillRect(
+        x+16,
+        y+39,
+        7,
+        7
+    );
+
+
+    /* ESPADA */
+
+    ctx.save();
+
+
+    ctx.translate(
+        x+13,
+        y+27
+    );
+
+
+    if(
+        player.facing<0
+    ){
+
+        ctx.scale(-1,1);
+
+    }
+
+
+    ctx.fillStyle=
+        "#c9c5b2";
+
+
+    if(
+        player.attacking
+    ){
+
+        ctx.rotate(-.5);
+
+
+        ctx.fillRect(
+            8,
+            -22,
+            36,
+            5
+        );
+
+
+        ctx.fillStyle=
+            "#fff0a3";
+
+        ctx.fillRect(
+            37,
+            -25,
+            8,
+            11
+        );
+
+    }
+    else{
+
+        ctx.fillRect(
+            7,
+            -3,
+            27,
+            4
+        );
+
+    }
+
+
+    ctx.restore();
+
+}
+
+
+/* =========================
+   INIMIGOS VISUAIS
+========================= */
+
+function drawEnemies(){
+
+    for(
+        const enemy
+        of enemies
+    ){
+
+        const x =
+            Math.floor(
+                enemy.x-
+                camera.x
+            );
+
+        const y =
+            Math.floor(
+                enemy.y
+            );
+
+
+        if(
+            enemy.hitTimer%2===1
+        ){
+
+            ctx.globalAlpha=.5;
+
+        }
+
+
+        if(
+            enemy.type==="boar"
+        ){
+
+            drawBoar(
+                x,
+                y
+            );
+
+        }
+
+
+        if(
+            enemy.type==="owl"
+        ){
+
+            drawOwl(
+                x,
+                y
+            );
+
+        }
+
+
+        if(
+            enemy.type==="guardian"
+        ){
+
+            drawGuardian(
+                x,
+                y
+            );
+
+        }
+
+
+        if(
+            enemy.type==="spirit"
+        ){
+
+            drawSpirit(
+                x,
+                y
+            );
+
+        }
+
+
+        ctx.globalAlpha=1;
+
+    }
+
+}
+
+
+/* =========================
+   JAVALI VISUAL
+========================= */
+
+function drawBoar(x,y){
+
+    ctx.fillStyle=
+        "#604a35";
+
+    ctx.fillRect(
+        x,
+        y+8,
+        36,
+        22
+    );
+
+
+    ctx.fillStyle=
+        "#795c40";
+
+    ctx.fillRect(
+        x+22,
+        y+2,
+        16,
+        22
+    );
+
+
+    ctx.fillStyle=
+        "#15120f";
+
+    ctx.fillRect(
+        x+31,
+        y+7,
+        4,
+        4
+    );
+
+
+    ctx.fillStyle=
+        "#292018";
+
+    ctx.fillRect(
+        x+5,
+        y+28,
+        7,
+        7
+    );
+
+    ctx.fillRect(
+        x+26,
+        y+28,
+        7,
+        7
+    );
+
+
+    ctx.fillStyle=
+        "#d7d0ad";
+
+    ctx.fillRect(
+        x+35,
+        y+16,
+        6,
+        3
+    );
+
+}
+
+
+/* =========================
+   CORUJA VISUAL
+========================= */
+
+function drawOwl(x,y){
+
+    ctx.fillStyle=
+        "#4e624f";
+
+    ctx.fillRect(
+        x+5,
+        y+4,
+        25,
+        20
+    );
+
+
+    ctx.fillStyle=
+        "#26372a";
+
+    ctx.fillRect(
+        x,
+        y+10,
+        10,
+        15
+    );
+
+    ctx.fillRect(
+        x+25,
+        y+10,
+        10,
+        15
+    );
+
+
+    ctx.fillStyle=
+        "#e5dfae";
+
+    ctx.fillRect(
+        x+8,
+        y+8,
+        7,
+        7
+    );
+
+    ctx.fillRect(
+        x+20,
+        y+8,
+        7,
+        7
+    );
+
+
+    ctx.fillStyle=
+        "#151713";
+
+    ctx.fillRect(
+        x+11,
+        y+10,
+        3,
+        3
+    );
+
+    ctx.fillRect(
+        x+22,
+        y+10,
+        3,
+        3
+    );
+
+
+    ctx.fillStyle=
+        "#b58b4d";
+
+    ctx.fillRect(
+        x+16,
+        y+15,
+        5,
+        5
+    );
+
+}
+
+
+/* =========================
+   GUARDIÃO VISUAL
+========================= */
+
+function drawGuardian(x,y){
+
+    ctx.fillStyle=
+        "#27382d";
+
+    ctx.fillRect(
+        x+3,
+        y,
+        30,
+        30
+    );
+
+
+    ctx.fillStyle=
+        "#526b53";
+
+    ctx.fillRect(
+        x+7,
+        y+4,
+        22,
+        12
+    );
+
+
+    ctx.fillStyle=
+        "#d2bd70";
+
+    ctx.fillRect(
+        x+10,
+        y+9,
+        4,
+        4
+    );
+
+    ctx.fillRect(
+        x+22,
+        y+9,
+        4,
+        4
+    );
+
+
+    ctx.fillStyle=
+        "#172019";
+
+    ctx.fillRect(
+        x,
+        y+30,
+        10,
+        7
+    );
+
+    ctx.fillRect(
+        x+25,
+        y+30,
+        10,
+        7
+    );
+
+}
+
+
+/* =========================
+   ESPÍRITO VISUAL
+========================= */
+
+function drawSpirit(x,y){
+
+    ctx.fillStyle=
+        "rgba(119,175,137,.75)";
+
+    ctx.fillRect(
+        x+5,
+        y+5,
+        25,
+        30
+    );
+
+
+    ctx.fillStyle=
+        "#d9ebd0";
+
+    ctx.fillRect(
+        x+10,
+        y+12,
+        5,
+        5
+    );
+
+    ctx.fillRect(
+        x+21,
+        y+12,
+        5,
+        5
+    );
+
+
+    ctx.fillStyle=
+        "#173025";
+
+    ctx.fillRect(
+        x+12,
+        y+25,
+        13,
+        3
+    );
+
+}
+
+
+/* =========================
+   BOSS VISUAL
+========================= */
+
+function drawBoss(){
+
+    if(
+        !boss ||
+        boss.defeated
+    )
+        return;
+
+
+    const x =
+        Math.floor(
+            boss.x-
+            camera.x
+        );
+
+    const y =
+        Math.floor(
+            boss.y
+        );
+
+
+    /* AURA */
+
+    ctx.fillStyle =
+        boss.phase===1
+        ?"rgba(60,130,70,.14)"
+        :boss.phase===2
+        ?"rgba(190,135,45,.17)"
+        :"rgba(215,55,55,.20)";
+
+
+    ctx.fillRect(
+        x-25,
+        y-25,
+        boss.width+50,
+        boss.height+50
+    );
+
+
+    /* CORPO */
+
+    ctx.fillStyle =
+        boss.phase===1
+        ?"#315b3b"
+        :boss.phase===2
+        ?"#8d692e"
+        :"#8e302f";
+
+
+    ctx.fillRect(
+        x+15,
+        y+30,
+        60,
+        75
+    );
+
+
+    /* CABEÇA */
+
+    ctx.fillStyle=
+        "#a45e42";
+
+    ctx.fillRect(
+        x+20,
+        y+10,
+        50,
+        45
+    );
+
+
+    /* CABELO */
+
+    ctx.fillStyle=
+        "#30251a";
+
+    ctx.fillRect(
+        x+12,
+        y,
+        66,
+        17
+    );
+
+    ctx.fillRect(
+        x+5,
+        y+10,
+        15,
+        45
+    );
+
+    ctx.fillRect(
+        x+70,
+        y+10,
+        15,
+        45
+    );
+
+
+    /* OLHOS */
+
+    ctx.fillStyle=
+        "#e5d36a";
+
+    ctx.fillRect(
+        x+30,
+        y+27,
+        7,
+        7
+    );
+
+    ctx.fillRect(
+        x+53,
+        y+27,
+        7,
+        7
+    );
+
+
+    /* PERNAS */
+
+    ctx.fillStyle=
+        "#253329";
+
+    ctx.fillRect(
+        x+20,
+        y+100,
+        18,
+        20
+    );
+
+    ctx.fillRect(
+        x+52,
+        y+100,
+        18,
+        20
+    );
+
+}
+
+
+/* =========================
+   PROJÉTEIS VISUAIS
+========================= */
+
+function drawProjectiles(){
+
+    for(
+        const projectile
+        of projectiles
+    ){
+
+        const x =
+            projectile.x-
+            camera.x;
+
+
+        ctx.fillStyle=
+            "#e6b74e";
+
+        ctx.fillRect(
+
+            x,
+
+            projectile.y,
+
+            projectile.size,
+
+            projectile.size
+
+        );
+
+
+        ctx.fillStyle=
+            "#fff0a0";
+
+        ctx.fillRect(
+
+            x+2,
+
+            projectile.y+2,
+
+            3,
+
+            3
+
+        );
+
+    }
+
+}
+
+
+/* =========================
+   PARTÍCULAS VISUAIS
+========================= */
+
+function drawParticles(){
+
+    for(
+        const particle
+        of particles
+    ){
+
+        ctx.globalAlpha =
+            particle.life/
+            particle.maxLife;
+
+
+        ctx.fillStyle =
+            particle.color;
+
+
+        ctx.fillRect(
+
+            Math.floor(
+                particle.x-
+                camera.x
+            ),
+
+            Math.floor(
+                particle.y
+            ),
+
+            particle.size,
+
+            particle.size
+
+        );
+
+    }
+
+
+    ctx.globalAlpha=1;
+
   }
+  /* =========================
+   PASSOS DA MATA
+========================= */
 
-  update();
-  draw();
+function drawForestSteps(){
 
-  requestAnimationFrame(loop);
+    if(!player.forestSteps)
+        return;
+
+    /*
+       A habilidade revela
+       caminhos e pegadas ocultas.
+    */
+
+    const start =
+        Math.floor(
+            camera.x/70
+        )*70;
+
+    for(
+        let worldX=start;
+        worldX<
+            camera.x+
+            WIDTH+
+            100;
+        worldX+=70
+    ){
+
+        /*
+           Alguns rastros aparecem
+           apenas em pontos específicos.
+        */
+
+        const secret =
+            Math.floor(
+                worldX/70
+            )%5===0;
+
+        if(!secret)
+            continue;
+
+
+        const x =
+            worldX-
+            camera.x;
+
+
+        const y =
+            458+
+            Math.sin(
+                worldX*.05
+            )*3;
+
+
+        ctx.globalAlpha=.65;
+
+
+        ctx.fillStyle=
+            "#9ac77b";
+
+
+        /* pegada esquerda */
+
+        ctx.fillRect(
+            x,
+            y,
+            7,
+            11
+        );
+
+        ctx.fillRect(
+            x+9,
+            y-5,
+            5,
+            7
+        );
+
+
+        /* pegada direita */
+
+        ctx.fillRect(
+            x+27,
+            y,
+            7,
+            11
+        );
+
+        ctx.fillRect(
+            x+35,
+            y-5,
+            5,
+            7
+        );
+
+    }
+
+
+    ctx.globalAlpha=1;
+
 }
 
-/* ---------- START ---------- */
 
-startButton.onclick=()=>{
+/* =========================
+   ÁREAS SECRETAS
+========================= */
 
-  startAudio();
+function updateForestSecrets(){
 
-  screen.classList.add("hidden");
+    if(!player.forestSteps)
+        return;
 
-  level=0;
 
-  player.coins=0;
-  player.health=100;
+    /*
+       Quando Caio passa por determinados
+       pontos, uma passagem secreta
+       pode ser revelada.
+    */
 
-  buildLevel();
+    const secretPoints=[
 
-  intro();
-};
+        760,
+        1540,
+        2320,
+        3150
 
-/* ---------- INICIALIZAÇÃO ---------- */
+    ];
 
-buildLevel();
-updateHUD();
-loop();
 
-</script>
+    for(
+        const point
+        of secretPoints
+    ){
 
-</body>
-    </html>
+        if(
+            Math.abs(
+                player.x-point
+           
