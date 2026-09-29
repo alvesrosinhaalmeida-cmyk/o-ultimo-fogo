@@ -4035,3 +4035,333 @@ function updateForestSecrets(){
             Math.abs(
                 player.x-point
            
+/* =========================
+   PASSOS DA MATA
+========================= */
+
+function drawForestSteps(){
+
+    if(!player.forestSteps)
+        return;
+
+    const start =
+        Math.floor(camera.x/70)*70;
+
+    for(
+        let worldX=start;
+        worldX<camera.x+WIDTH+100;
+        worldX+=70
+    ){
+
+        const secret =
+            Math.floor(worldX/70)%5===0;
+
+        if(!secret)
+            continue;
+
+        const x=worldX-camera.x;
+
+        const y=
+            458+
+            Math.sin(worldX*.05)*3;
+
+        ctx.globalAlpha=.65;
+
+        ctx.fillStyle="#9ac77b";
+
+        ctx.fillRect(x,y,7,11);
+        ctx.fillRect(x+9,y-5,5,7);
+
+        ctx.fillRect(x+27,y,7,11);
+        ctx.fillRect(x+35,y-5,5,7);
+    }
+
+    ctx.globalAlpha=1;
+}
+
+
+/* =========================
+   ÁREAS SECRETAS
+========================= */
+
+function updateForestSecrets(){
+
+    if(!player.forestSteps)
+        return;
+
+    const secretPoints=[
+        760,
+        1540,
+        2320,
+        3150
+    ];
+
+    for(
+        const point of secretPoints
+    ){
+
+        if(
+            Math.abs(
+                player.x-point
+            )<35
+        ){
+
+            showMessage(
+                "As pegadas do Curupira revelaram um caminho oculto."
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================
+   SAÍDA DA FASE
+========================= */
+
+function checkStageExit(){
+
+    if(currentStage<4){
+
+        if(
+            player.x>
+            worldWidth-140
+        ){
+
+            nextStage();
+
+        }
+
+        return;
+    }
+
+    if(
+        currentStage===4 &&
+        boss &&
+        boss.defeated &&
+        player.x>
+        worldWidth-140
+    ){
+
+        finishWorld();
+
+    }
+
+}
+
+
+/* =========================
+   PRÓXIMA FASE
+========================= */
+
+function nextStage(){
+
+    currentStage++;
+
+    if(currentStage>=5){
+
+        currentStage=4;
+        return;
+
+    }
+
+    showStageIntro();
+
+}
+
+
+/* =========================
+   INTRO DA FASE
+========================= */
+
+function showStageIntro(){
+
+    menu.innerHTML=`
+
+        <div class="panel">
+
+            <div class="title">
+                ${stages[currentStage].name}
+            </div>
+
+            <div class="subtitle">
+
+                A floresta fica mais profunda.
+
+                <br><br>
+
+                Novos caminhos surgem
+                entre as árvores.
+
+                <br><br>
+
+                Os perigos também
+                estão ficando maiores.
+
+            </div>
+
+            <button id="enterStage">
+                ENTRAR NA FASE
+            </button>
+
+        </div>
+
+    `;
+
+    menu.classList.remove("hidden");
+
+    document
+        .getElementById("enterStage")
+        .onclick=()=>{
+
+            menu.classList.add("hidden");
+
+            buildStage();
+
+            showMessage(
+                stages[currentStage].name
+            );
+
+        };
+
+}
+
+
+/* =========================
+   COMEÇAR
+========================= */
+
+startButton.onclick=()=>{
+
+    startAudio();
+
+    menu.classList.add("hidden");
+
+    currentStage=0;
+
+    player.coins=0;
+    player.forestSteps=false;
+    player.dead=false;
+
+    player.checkpointX=120;
+    player.checkpointY=350;
+
+    buildStage();
+
+    showMessage(
+        "Minha avó dizia que a floresta era viva..."
+    );
+
+};
+
+
+/* =========================
+   LOOP
+========================= */
+
+function update(){
+
+    if(
+        menu.classList.contains("hidden")
+    ){
+
+        updatePlayer();
+
+        updateEnemies();
+
+        updateCollectibles();
+
+        updateCheckpoint();
+
+        updateBoss();
+
+        updateProjectiles();
+
+        updateParticles();
+
+        updateForestSecrets();
+
+        updateCamera();
+
+        checkStageExit();
+
+        updateHUD();
+
+    }
+
+}
+
+
+function draw(){
+
+    ctx.clearRect(
+        0,
+        0,
+        WIDTH,
+        HEIGHT
+    );
+
+    ctx.save();
+
+    if(camera.shake>0){
+
+        ctx.translate(
+            (Math.random()-.5)*
+            camera.shake,
+
+            (Math.random()-.5)*
+            camera.shake
+        );
+
+    }
+
+    drawBackground();
+
+    drawPlatforms();
+
+    drawCollectibles();
+
+    drawProjectiles();
+
+    drawEnemies();
+
+    drawBoss();
+
+    drawForestSteps();
+
+    drawPlayer();
+
+    drawParticles();
+
+    ctx.restore();
+
+}
+
+
+function gameLoop(){
+
+    update();
+
+    draw();
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
+
+/* =========================
+   INICIAR JOGO
+========================= */
+
+buildStage();
+
+gameLoop();
+
+</script>
+
+</body>
+</html>
