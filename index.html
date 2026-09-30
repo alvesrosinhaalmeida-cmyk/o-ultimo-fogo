@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
 <title>O Último Fogo</title>
 
 <style>
+
 *{
-    margin:0;
-    padding:0;
     box-sizing:border-box;
-    user-select:none;
-    -webkit-user-select:none;
-    touch-action:none;
+    -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
+html,
+body{
+    margin:0;
+    padding:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#050807;
+    background:#050907;
     font-family:monospace;
+    touch-action:none;
 }
 
 body{
@@ -33,330 +38,523 @@ body{
 
 #game{
     position:relative;
-    width:min(100vw,177.777vh);
-    height:min(100vh,56.25vw);
+    width:100vw;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
     overflow:hidden;
-    background:#07100b;
-    border:2px solid #33483b;
 }
 
 canvas{
+    display:block;
     width:100%;
     height:100%;
-    display:block;
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+    background:#07120d;
     image-rendering:pixelated;
 }
 
+
+/* =========================
+   HUD
+========================= */
+
 #hud{
     position:absolute;
-    inset:0;
+    top:15px;
+    left:15px;
+    right:15px;
+    display:flex;
+    align-items:center;
+    gap:14px;
     pointer-events:none;
-    color:white;
-    text-shadow:2px 2px #000;
-    font-weight:bold;
+    z-index:10;
 }
 
 #healthBox{
-    position:absolute;
-    left:18px;
-    top:16px;
     width:190px;
     height:20px;
-    border:3px solid white;
-    background:#241313;
+    border:3px solid #d8b85a;
+    background:#111;
 }
 
 #health{
     width:100%;
     height:100%;
-    background:#d33b3b;
-}
-
-#stageName{
-    position:absolute;
-    top:18px;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:14px;
-    white-space:nowrap;
+    background:#a8443e;
+    transition:width .15s;
 }
 
 #coins{
-    position:absolute;
-    right:20px;
-    top:18px;
-    font-size:15px;
+    color:#e5c65f;
+    font-size:18px;
+    text-shadow:2px 2px #000;
 }
+
+#stageName{
+    margin-left:auto;
+    color:#ddd5b5;
+    font-size:16px;
+    text-shadow:2px 2px #000;
+}
+
+
+/* =========================
+   BOSS HUD
+========================= */
 
 #bossHud{
     position:absolute;
-    top:48px;
     left:50%;
+    top:58px;
     transform:translateX(-50%);
-    width:320px;
+    width:330px;
     display:none;
+    z-index:10;
+    pointer-events:none;
 }
 
-#bossName{
+#bossTitle{
+    color:#e3c467;
     text-align:center;
-    margin-bottom:4px;
+    font-size:15px;
+    margin-bottom:5px;
+    text-shadow:2px 2px #000;
 }
 
 #bossBar{
-    height:13px;
-    border:2px solid white;
-    background:#240d0d;
+    width:100%;
+    height:17px;
+    border:3px solid #d8b85a;
+    background:#111;
 }
 
 #bossHealth{
     width:100%;
     height:100%;
-    background:#b83b3b;
+    background:#8d3c38;
 }
 
-#message{
-    position:absolute;
-    left:50%;
-    bottom:18%;
-    transform:translateX(-50%);
-    width:min(650px,80%);
-    padding:14px 18px;
-    background:rgba(5,10,7,.92);
-    border:3px solid #d5b35b;
-    color:white;
-    text-align:center;
-    font-size:14px;
-    line-height:1.5;
-    display:none;
-}
+
+/* =========================
+   MENU
+========================= */
 
 #menu{
     position:absolute;
     inset:0;
     z-index:30;
-    background:
-        radial-gradient(
-            circle at center,
-            rgba(35,67,45,.55),
-            rgba(2,7,5,.97)
-        );
     display:flex;
-    justify-content:center;
     align-items:center;
-    text-align:center;
+    justify-content:center;
+    background:rgba(0,0,0,.72);
+    transition:opacity .2s;
+}
+
+#menu.hidden{
+    display:none;
 }
 
 .panel{
-    width:min(650px,88%);
-    padding:35px;
-    background:#0a1510;
-    border:4px solid #c8a54d;
+    width:min(850px,90vw);
+    max-height:90vh;
+    overflow:auto;
+    padding:40px 30px;
+    text-align:center;
+    border:5px solid #d6b75c;
+    background:#07120d;
     box-shadow:
-        0 0 0 5px #17271d,
-        0 0 40px rgba(0,0,0,.8);
+        0 0 0 8px rgba(214,183,92,.08),
+        0 0 50px rgba(0,0,0,.8);
 }
 
 .title{
-    color:#e3bd5e;
-    font-size:38px;
-    margin-bottom:12px;
-    letter-spacing:3px;
+    color:#e0bd59;
+    font-size:42px;
+    letter-spacing:8px;
+    margin-bottom:28px;
 }
 
 .subtitle{
-    color:#b9c8bd;
-    font-size:14px;
-    line-height:1.7;
-    margin-bottom:25px;
+    color:#bfc6bd;
+    font-size:17px;
+    line-height:1.9;
+    margin-bottom:30px;
 }
 
 button{
-    background:#17291f;
-    border:3px solid #d2b35b;
-    color:white;
-    padding:13px 30px;
+    border:3px solid #d9bb5e;
+    background:#0b1b12;
+    color:#f0ead0;
+    padding:16px 35px;
     font-family:monospace;
+    font-size:18px;
     font-weight:bold;
-    font-size:15px;
     cursor:pointer;
     touch-action:manipulation;
 }
 
-button:active{
-    transform:translateY(2px);
-    background:#294432;
+button:hover{
+    background:#183522;
 }
+
+button:active{
+    transform:scale(.96);
+}
+
+
+/* =========================
+   MENSAGEM
+========================= */
+
+#message{
+    position:absolute;
+    left:50%;
+    bottom:105px;
+    transform:translateX(-50%);
+    width:min(700px,90vw);
+    padding:12px 18px;
+    text-align:center;
+    color:#eee6ca;
+    background:rgba(4,10,7,.88);
+    border:2px solid #8c7942;
+    font-size:15px;
+    display:none;
+    z-index:20;
+    pointer-events:none;
+}
+
+
+/* =========================
+   CONTROLES
+========================= */
 
 #controls{
     position:absolute;
-    inset:0;
-    pointer-events:none;
-    z-index:20;
-}
-
-.control{
-    position:absolute;
-    width:60px;
-    height:60px;
-    border-radius:12px;
-    border:3px solid rgba(255,255,255,.4);
-    background:rgba(8,17,12,.58);
-    color:white;
+    left:0;
+    right:0;
+    bottom:18px;
+    height:100px;
     display:flex;
     align-items:center;
-    justify-content:center;
-    font-size:21px;
+    justify-content:space-between;
+    padding:0 25px;
+    z-index:20;
+    pointer-events:none;
+}
+
+.controlGroup{
+    display:flex;
+    gap:10px;
     pointer-events:auto;
 }
 
+.control{
+    width:62px;
+    height:62px;
+    border:2px solid rgba(220,195,110,.7);
+    border-radius:12px;
+    background:rgba(10,25,16,.75);
+    color:#ddd2a7;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:23px;
+    user-select:none;
+    touch-action:none;
+}
+
 .control:active{
-    background:rgba(100,130,100,.65);
+    background:rgba(80,100,55,.8);
+    transform:scale(.94);
 }
 
-#left{
-    left:18px;
-    bottom:18px;
+.small{
+    width:54px;
+    height:54px;
 }
 
-#right{
-    left:88px;
-    bottom:18px;
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:700px){
+
+    #hud{
+        top:8px;
+        left:8px;
+        right:8px;
+        gap:7px;
+    }
+
+    #healthBox{
+        width:125px;
+        height:15px;
+    }
+
+    #coins{
+        font-size:13px;
+    }
+
+    #stageName{
+        font-size:11px;
+    }
+
+    #bossHud{
+        top:38px;
+        width:240px;
+    }
+
+    .title{
+        font-size:25px;
+        letter-spacing:4px;
+    }
+
+    .subtitle{
+        font-size:13px;
+    }
+
+    .panel{
+        padding:25px 18px;
+        border-width:3px;
+    }
+
+    button{
+        font-size:15px;
+        padding:13px 25px;
+    }
+
+    #controls{
+        bottom:8px;
+        padding:0 10px;
+    }
+
+    .control{
+        width:52px;
+        height:52px;
+        font-size:18px;
+    }
+
+    .small{
+        width:46px;
+        height:46px;
+    }
+
+    #message{
+        bottom:78px;
+        font-size:12px;
+    }
+
 }
 
-#jump{
-    right:150px;
-    bottom:18px;
-}
-
-#dash{
-    right:82px;
-    bottom:18px;
-}
-
-#attack{
-    right:18px;
-    bottom:84px;
-}
-
-#interact{
-    right:18px;
-    bottom:18px;
-}
-
-.hidden{
-    display:none !important;
-}
 </style>
 </head>
+
 
 <body>
 
 <div id="game">
 
-<canvas id="canvas" width="960" height="540"></canvas>
+    <canvas
+        id="canvas"
+        width="960"
+        height="540">
+    </canvas>
 
-<div id="hud">
 
-    <div id="healthBox">
-        <div id="health"></div>
+    <!-- HUD -->
+
+    <div id="hud">
+
+        <div id="healthBox">
+            <div id="health"></div>
+        </div>
+
+        <div id="coins">
+            ✦ 0
+        </div>
+
+        <div id="stageName">
+            1-1 — A Floresta Perdida
+        </div>
+
     </div>
 
-    <div id="stageName">
-        1-1 — A Floresta Perdida
-    </div>
 
-    <div id="coins">
-        ✦ 0
-    </div>
+    <!-- BOSS -->
 
     <div id="bossHud">
-        <div id="bossName">CURUPIRA</div>
+
+        <div id="bossTitle">
+            CURUPIRA
+        </div>
+
         <div id="bossBar">
             <div id="bossHealth"></div>
         </div>
+
     </div>
+
+
+    <!-- MENSAGEM -->
 
     <div id="message"></div>
 
-</div>
 
-<div id="menu">
+    <!-- MENU -->
 
-    <div class="panel">
+    <div id="menu">
 
-        <div class="title">
-            O ÚLTIMO FOGO
+        <div class="panel">
+
+            <div class="title">
+                O ÚLTIMO FOGO
+            </div>
+
+            <div class="subtitle">
+
+                A floresta guarda histórias
+                que ninguém mais acredita.
+
+                <br><br>
+
+                Mas alguma coisa despertou.
+
+                <br><br>
+
+                Atravesse a mata,
+                descubra seus segredos
+                e encontre o fogo perdido.
+
+            </div>
+
+            <button
+                id="startButton"
+                type="button"
+                onclick="startGame()">
+
+                COMEÇAR
+
+            </button>
+
         </div>
 
-        <div class="subtitle">
-            A floresta guarda histórias
-            que ninguém mais acredita.
-            <br><br>
+    </div>
 
-            Mas alguma coisa despertou.
-            <br><br>
 
-            Atravesse a mata,
-            descubra seus segredos
-            e encontre o fogo perdido.
+    <!-- CONTROLES -->
+
+    <div id="controls">
+
+        <div class="controlGroup">
+
+            <div
+                class="control"
+                id="left">
+                ◀
+            </div>
+
+            <div
+                class="control"
+                id="right">
+                ▶
+            </div>
+
         </div>
 
-        <button id="startButton" type="button">
-            COMEÇAR
-        </button>
+
+        <div class="controlGroup">
+
+            <div
+                class="control small"
+                id="interact">
+                C
+            </div>
+
+            <div
+                class="control small"
+                id="dash">
+                X
+            </div>
+
+            <div
+                class="control"
+                id="jump">
+                ▲
+            </div>
+
+            <div
+                class="control"
+                id="attack">
+                ⚔
+            </div>
+
+        </div>
 
     </div>
 
 </div>
 
-<div id="controls">
-
-    <div class="control" id="left">◀</div>
-    <div class="control" id="right">▶</div>
-    <div class="control" id="jump">▲</div>
-    <div class="control" id="dash">◆</div>
-    <div class="control" id="attack">⚔</div>
-    <div class="control" id="interact">●</div>
-
-</div>
-
-</div>
 
 <script>
+
 "use strict";
 
-/* =========================================================
+
+/* =====================================================
    CANVAS
-========================================================= */
+===================================================== */
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas =
+    document.getElementById("canvas");
 
-ctx.imageSmoothingEnabled = false;
+const ctx =
+    canvas.getContext("2d");
 
-const WIDTH = 960;
-const HEIGHT = 540;
+ctx.imageSmoothingEnabled=false;
 
-
-/* =========================================================
-   INTERFACE
-========================================================= */
-
-const menu = document.getElementById("menu");
-const startButton = document.getElementById("startButton");
-const healthBar = document.getElementById("health");
-const coinsText = document.getElementById("coins");
-const stageName = document.getElementById("stageName");
-const messageBox = document.getElementById("message");
-const bossHud = document.getElementById("bossHud");
-const bossHealth = document.getElementById("bossHealth");
+const WIDTH=960;
+const HEIGHT=540;
 
 
-/* =========================================================
+/* =====================================================
+   ELEMENTOS
+===================================================== */
+
+const menu =
+    document.getElementById("menu");
+
+const startButton =
+    document.getElementById("startButton");
+
+const healthBar =
+    document.getElementById("health");
+
+const coinsText =
+    document.getElementById("coins");
+
+const stageName =
+    document.getElementById("stageName");
+
+const messageBox =
+    document.getElementById("message");
+
+const bossHud =
+    document.getElementById("bossHud");
+
+const bossHealth =
+    document.getElementById("bossHealth");
+
+
+/* =====================================================
    ÁUDIO
-========================================================= */
+===================================================== */
 
-let audioContext = null;
+let audioContext=null;
 
 function startAudio(){
 
@@ -366,22 +564,36 @@ function startAudio(){
             window.AudioContext ||
             window.webkitAudioContext;
 
-        if(!AudioClass) return;
-
-        if(!audioContext){
-            audioContext = new AudioClass();
+        if(!AudioClass){
+            return;
         }
 
-        if(audioContext.state === "suspended"){
-            audioContext.resume().catch(()=>{});
+        if(!audioContext){
+            audioContext =
+                new AudioClass();
+        }
+
+        if(
+            audioContext.state===
+            "suspended"
+        ){
+
+            audioContext
+                .resume()
+                .catch(()=>{});
+
         }
 
     }catch(error){
 
-        console.log("Áudio indisponível.");
+        console.log(
+            "Áudio indisponível."
+        );
 
     }
+
 }
+
 
 function beep(
     frequency,
@@ -390,7 +602,9 @@ function beep(
     volume=.04
 ){
 
-    if(!audioContext) return;
+    if(!audioContext){
+        return;
+    }
 
     try{
 
@@ -400,8 +614,10 @@ function beep(
         const gain =
             audioContext.createGain();
 
-        oscillator.type = type;
-        oscillator.frequency.value = frequency;
+        oscillator.type=type;
+
+        oscillator.frequency.value=
+            frequency;
 
         gain.gain.setValueAtTime(
             volume,
@@ -410,151 +626,177 @@ function beep(
 
         gain.gain.exponentialRampToValueAtTime(
             .001,
-            audioContext.currentTime + duration
+            audioContext.currentTime+
+            duration
         );
 
         oscillator.connect(gain);
-        gain.connect(audioContext.destination);
+
+        gain.connect(
+            audioContext.destination
+        );
 
         oscillator.start();
 
         oscillator.stop(
-            audioContext.currentTime + duration
+            audioContext.currentTime+
+            duration
         );
 
     }catch(error){}
+
 }
 
-function soundAttack(){
-    beep(170,.07,"sawtooth",.08);
 
-    setTimeout(()=>{
-        beep(90,.08,"square",.04);
-    },30);
+function soundAttack(){
+    beep(180,.06,"sawtooth",.07);
 }
 
 function soundJump(){
-    beep(280,.08,"square",.05);
-
-    setTimeout(()=>{
-        beep(420,.07,"square",.03);
-    },40);
+    beep(320,.08,"square",.05);
 }
 
 function soundDash(){
-    beep(100,.06,"sawtooth",.07);
-
-    setTimeout(()=>{
-        beep(190,.08,"square",.04);
-    },30);
+    beep(100,.08,"sawtooth",.07);
 }
 
 function soundHit(){
-    beep(70,.12,"sawtooth",.08);
+    beep(70,.12,"sawtooth",.07);
 }
 
 function soundCoin(){
-    beep(700,.06,"square",.04);
+    beep(700,.05,"square",.04);
 
     setTimeout(()=>{
-        beep(1000,.08,"square",.03);
-    },50);
+        beep(1000,.07,"square",.03);
+    },40);
 }
 
 
-/* =========================================================
-   INPUT
-========================================================= */
+/* =====================================================
+   TECLADO
+===================================================== */
 
-const keys = {};
+const keys={};
 
-window.addEventListener("keydown",event=>{
 
-    const key = event.key.toLowerCase();
+window.addEventListener(
+    "keydown",
+    function(event){
 
-    keys[key] = true;
+        const key=
+            event.key.toLowerCase();
 
-    if([
-        "arrowleft",
-        "arrowright",
-        "arrowup",
-        " ",
-        "z",
-        "x",
-        "c"
-    ].includes(key)){
+        keys[key]=true;
 
-        event.preventDefault();
+        if(
+            [
+                "arrowleft",
+                "arrowright",
+                "arrowup",
+                " ",
+                "z",
+                "x",
+                "c"
+            ].includes(key)
+        ){
+
+            event.preventDefault();
+
+        }
 
     }
-
-});
-
-window.addEventListener("keyup",event=>{
-
-    keys[event.key.toLowerCase()] = false;
-
-});
+);
 
 
-function bindButton(id,key){
+window.addEventListener(
+    "keyup",
+    function(event){
+
+        keys[
+            event.key.toLowerCase()
+        ]=false;
+
+    }
+);
+
+
+/* =====================================================
+   CONTROLES TOUCH
+===================================================== */
+
+function bindButton(
+    id,
+    key
+){
 
     const button =
         document.getElementById(id);
 
-    if(!button) return;
-
-    function press(event){
-
-        event.preventDefault();
-
-        keys[key] = true;
-
+    if(!button){
+        return;
     }
 
-    function release(event){
-
-        event.preventDefault();
-
-        keys[key] = false;
-
-    }
 
     button.addEventListener(
         "pointerdown",
-        press
+        function(event){
+
+            event.preventDefault();
+
+            keys[key]=true;
+
+        }
     );
+
 
     button.addEventListener(
         "pointerup",
-        release
+        function(event){
+
+            event.preventDefault();
+
+            keys[key]=false;
+
+        }
     );
+
 
     button.addEventListener(
         "pointercancel",
-        release
+        function(){
+
+            keys[key]=false;
+
+        }
     );
+
 
     button.addEventListener(
         "pointerleave",
-        release
+        function(){
+
+            keys[key]=false;
+
+        }
     );
 
 }
 
+
 bindButton("left","arrowleft");
 bindButton("right","arrowright");
 bindButton("jump","arrowup");
-bindButton("dash","x");
 bindButton("attack","z");
+bindButton("dash","x");
 bindButton("interact","c");
 
 
-/* =========================================================
+/* =====================================================
    FASES
-========================================================= */
+===================================================== */
 
-const stages = [
+const stages=[
 
     {
         name:"1-1 — A Floresta Perdida",
@@ -583,25 +825,28 @@ const stages = [
 
 ];
 
-let currentStage = 0;
-let worldWidth = stages[0].width;
+
+let currentStage=0;
+
+let worldWidth=
+    stages[0].width;
 
 
-/* =========================================================
+/* =====================================================
    CÂMERA
-========================================================= */
+===================================================== */
 
-const camera = {
+const camera={
     x:0,
     shake:0
 };
 
 
-/* =========================================================
+/* =====================================================
    PLAYER
-========================================================= */
+===================================================== */
 
-const player = {
+const player={
 
     x:120,
     y:350,
@@ -612,7 +857,7 @@ const player = {
     vx:0,
     vy:0,
 
-    speed:3.3,
+    speed:3.4,
     jumpPower:11,
 
     facing:1,
@@ -646,45 +891,55 @@ const player = {
 };
 
 
-/* =========================================================
-   MUNDO
-========================================================= */
+/* =====================================================
+   ARRAYS
+===================================================== */
 
-let platforms = [];
-let enemies = [];
-let collectibles = [];
-let particles = [];
-let projectiles = [];
-let boss = null;
+let platforms=[];
+let enemies=[];
+let collectibles=[];
+let particles=[];
+let projectiles=[];
+
+let boss=null;
 
 
-/* =========================================================
+/* =====================================================
    PLATAFORMAS
-========================================================= */
+===================================================== */
 
-function createPlatform(x,y,width,height=50){
+function createPlatform(
+    x,
+    y,
+    width,
+    height=50
+){
 
     platforms.push({
-        x,
-        y,
-        width,
-        height
+        x:x,
+        y:y,
+        width:width,
+        height:height
     });
 
 }
 
 
-/* =========================================================
+/* =====================================================
    INIMIGOS
-========================================================= */
+===================================================== */
 
-function createEnemy(type,x,y){
+function createEnemy(
+    type,
+    x,
+    y
+){
 
-    const data = {
+    const data={
 
         boar:{
             width:38,
-            height:30,
+            height:35,
             hp:35
         },
 
@@ -696,7 +951,7 @@ function createEnemy(type,x,y){
 
         guardian:{
             width:38,
-            height:36,
+            height:37,
             hp:60
         },
 
@@ -708,14 +963,16 @@ function createEnemy(type,x,y){
 
     };
 
-    const d = data[type];
+
+    const d=data[type];
+
 
     enemies.push({
 
-        type,
+        type:type,
 
-        x,
-        y,
+        x:x,
+        y:y,
 
         width:d.width,
         height:d.height,
@@ -727,7 +984,9 @@ function createEnemy(type,x,y){
         maxHp:d.hp,
 
         direction:
-            Math.random()>.5 ? 1 : -1,
+            Math.random()>.5
+            ?1
+            :-1,
 
         hitTimer:0,
 
@@ -738,46 +997,13 @@ function createEnemy(type,x,y){
 }
 
 
-/* =========================================================
-   PARTÍCULAS
-========================================================= */
-
-function createParticle(
-    x,
-    y,
-    color,
-    size,
-    vx,
-    vy,
-    life=30
-){
-
-    particles.push({
-
-        x,
-        y,
-
-        color,
-        size,
-
-        vx,
-        vy,
-
-        life,
-        maxLife:life
-
-    });
-
-}
-
-
-/* =========================================================
+/* =====================================================
    BOSS
-========================================================= */
+===================================================== */
 
 function createBoss(){
 
-    boss = {
+    boss={
 
         x:3650,
         y:350,
@@ -803,23 +1029,57 @@ function createBoss(){
 }
 
 
-/* =========================================================
+/* =====================================================
+   PARTÍCULAS
+===================================================== */
+
+function createParticle(
+    x,
+    y,
+    color,
+    size,
+    vx,
+    vy,
+    life=30
+){
+
+    particles.push({
+
+        x:x,
+        y:y,
+
+        color:color,
+        size:size,
+
+        vx:vx,
+        vy:vy,
+
+        life:life,
+        maxLife:life
+
+    });
+
+}
+
+
+/* =====================================================
    CONSTRUIR FASE
-========================================================= */
+===================================================== */
 
 function buildStage(){
 
-    platforms = [];
-    enemies = [];
-    collectibles = [];
-    particles = [];
-    projectiles = [];
-    boss = null;
+    platforms=[];
+    enemies=[];
+    collectibles=[];
+    particles=[];
+    projectiles=[];
 
-    worldWidth =
+    boss=null;
+
+    worldWidth=
         stages[currentStage].width;
 
-    stageName.textContent =
+    stageName.textContent=
         stages[currentStage].name;
 
 
@@ -843,7 +1103,7 @@ function buildStage(){
 
     /* PLATAFORMAS */
 
-    const layouts = [
+    const layouts=[
 
         [
             [300,410,180],
@@ -911,7 +1171,10 @@ function buildStage(){
 
     ];
 
-    for(const p of layouts[currentStage]){
+
+    for(
+        const p of layouts[currentStage]
+    ){
 
         createPlatform(
             p[0],
@@ -930,9 +1193,9 @@ function buildStage(){
         x+=280
     ){
 
-        const random = Math.random();
+        const r=Math.random();
 
-        if(random<.4){
+        if(r<.4){
 
             createEnemy(
                 "boar",
@@ -941,7 +1204,7 @@ function buildStage(){
             );
 
         }
-        else if(random<.62){
+        else if(r<.62){
 
             createEnemy(
                 "owl",
@@ -950,7 +1213,7 @@ function buildStage(){
             );
 
         }
-        else if(random<.84){
+        else if(r<.84){
 
             createEnemy(
                 "guardian",
@@ -1007,52 +1270,67 @@ function buildStage(){
     }
 
 
-    player.x = 120;
-    player.y = 350;
+    /* PLAYER */
 
-    player.checkpointX = 120;
-    player.checkpointY = 350;
+    player.x=120;
+    player.y=350;
 
-    player.vx = 0;
-    player.vy = 0;
+    player.vx=0;
+    player.vy=0;
 
-    player.health = player.maxHealth;
+    player.health=
+        player.maxHealth;
+
+    player.checkpointX=120;
+    player.checkpointY=350;
+
+
+    camera.x=0;
+
+    bossHud.style.display=
+        currentStage===4
+        ?"block"
+        :"none";
 
     updateHUD();
-
-    bossHud.style.display =
-        currentStage===4
-        ? "block"
-        : "none";
 
 }
 
 
-/* =========================================================
+/* =====================================================
    COLISÃO
-========================================================= */
+===================================================== */
 
 function collision(a,b){
 
     return(
 
-        a.x < b.x+b.width &&
-        a.x+a.width > b.x &&
-        a.y < b.y+b.height &&
-        a.y+a.height > b.y
+        a.x <
+        b.x+b.width &&
+
+        a.x+a.width >
+        b.x &&
+
+        a.y <
+        b.y+b.height &&
+
+        a.y+a.height >
+        b.y
 
     );
 
 }
 
 
-/* =========================================================
+/* =====================================================
    PLAYER
-========================================================= */
+===================================================== */
 
 function updatePlayer(){
 
-    if(player.dead) return;
+    if(player.dead){
+        return;
+    }
 
 
     if(player.invincible>0)
@@ -1077,9 +1355,8 @@ function updatePlayer(){
     }
 
 
-    /* MOVIMENTO */
-
     let direction=0;
+
 
     if(
         keys["arrowleft"] ||
@@ -1089,6 +1366,7 @@ function updatePlayer(){
         direction=-1;
 
     }
+
 
     if(
         keys["arrowright"] ||
@@ -1102,16 +1380,22 @@ function updatePlayer(){
 
     if(direction!==0){
 
-        player.vx += direction*.65;
+        player.vx+=
+            direction*.65;
 
-        if(Math.abs(player.vx)>player.speed){
+        if(
+            Math.abs(player.vx)>
+            player.speed
+        ){
 
-            player.vx =
-                direction*player.speed;
+            player.vx=
+                direction*
+                player.speed;
 
         }
 
-        player.facing=direction;
+        player.facing=
+            direction;
 
     }
     else{
@@ -1132,24 +1416,12 @@ function updatePlayer(){
         player.grounded
     ){
 
-        player.vy=-player.jumpPower;
+        player.vy=
+            -player.jumpPower;
 
         player.grounded=false;
 
         soundJump();
-
-        for(let i=0;i<7;i++){
-
-            createParticle(
-                player.x+14,
-                player.y+45,
-                "#8da987",
-                3,
-                (Math.random()-.5)*2,
-                -Math.random()*2
-            );
-
-        }
 
     }
 
@@ -1157,18 +1429,18 @@ function updatePlayer(){
     /* ATAQUE */
 
     if(
-        (
-            keys["z"] ||
-            keys["j"]
-        ) &&
+        keys["z"] &&
         player.attackCooldown<=0
     ){
 
         player.attacking=true;
+
         player.attackTimer=10;
+
         player.attackCooldown=18;
 
         player.combo++;
+
         player.comboTimer=50;
 
         soundAttack();
@@ -1196,6 +1468,7 @@ function updatePlayer(){
     ){
 
         player.dashCooldown=55;
+
         player.dashTimer=10;
 
         player.vx=
@@ -1204,20 +1477,6 @@ function updatePlayer(){
         player.invincible=20;
 
         soundDash();
-
-        for(let i=0;i<12;i++){
-
-            createParticle(
-                player.x,
-                player.y+22,
-                "#8cb99a",
-                3,
-                -player.facing*Math.random()*3,
-                (Math.random()-.5)*2,
-                20
-            );
-
-        }
 
     }
 
@@ -1248,30 +1507,39 @@ function updatePlayer(){
 
     /* PLATAFORMAS */
 
-    for(const platform of platforms){
+    for(
+        const platform of platforms
+    ){
 
         if(
 
-            player.x+player.width >
+            player.x+player.width>
             platform.x &&
 
-            player.x <
-            platform.x+platform.width &&
+            player.x<
+            platform.x+
+            platform.width &&
 
-            player.y+player.height >=
+            player.y+
+            player.height>=
             platform.y &&
 
-            player.y+player.height <=
-            platform.y+platform.height+player.vy+6 &&
+            player.y+
+            player.height<=
+            platform.y+
+            platform.height+
+            8 &&
 
             player.vy>=0
 
         ){
 
-            player.y =
-                platform.y-player.height;
+            player.y=
+                platform.y-
+                player.height;
 
             player.vy=0;
+
             player.grounded=true;
 
         }
@@ -1284,11 +1552,17 @@ function updatePlayer(){
     if(player.x<0)
         player.x=0;
 
-    if(player.x>worldWidth-player.width)
-        player.x=worldWidth-player.width;
 
+    if(
+        player.x>
+        worldWidth-player.width
+    ){
 
-    /* QUEDA */
+        player.x=
+            worldWidth-player.width;
+
+    }
+
 
     if(player.y>650){
 
@@ -1316,11 +1590,17 @@ function updatePlayer(){
         };
 
 
-        for(const enemy of enemies){
+        for(
+            const enemy of enemies
+        ){
 
-            if(enemy.dead) continue;
-
-            if(collision(hitbox,enemy)){
+            if(
+                !enemy.dead &&
+                collision(
+                    hitbox,
+                    enemy
+                )
+            ){
 
                 hitEnemy(enemy);
 
@@ -1333,7 +1613,10 @@ function updatePlayer(){
             boss &&
             boss.active &&
             !boss.defeated &&
-            collision(hitbox,boss)
+            collision(
+                hitbox,
+                boss
+            )
         ){
 
             hitBoss();
@@ -1345,15 +1628,19 @@ function updatePlayer(){
 }
 
 
-/* =========================================================
+/* =====================================================
    INIMIGOS
-========================================================= */
+===================================================== */
 
 function updateEnemies(){
 
-    for(const enemy of enemies){
+    for(
+        const enemy of enemies
+    ){
 
-        if(enemy.dead) continue;
+        if(enemy.dead)
+            continue;
+
 
         if(enemy.hitTimer>0)
             enemy.hitTimer--;
@@ -1385,7 +1672,7 @@ function updateEnemies(){
                 :12
             );
 
-            player.vx =
+            player.vx=
                 player.x<enemy.x
                 ?-5
                 :5;
@@ -1396,34 +1683,44 @@ function updateEnemies(){
 
     }
 
-    enemies =
-        enemies.filter(enemy=>!enemy.dead);
+
+    enemies=
+        enemies.filter(
+            enemy=>!enemy.dead
+        );
 
 }
 
 
 function updateBoar(enemy){
 
-    const distance =
+    const distance=
         player.x-enemy.x;
 
-    if(Math.abs(distance)<330){
 
-        enemy.direction =
-            distance>0 ? 1 : -1;
+    if(
+        Math.abs(distance)<330
+    ){
 
-        enemy.vx =
+        enemy.direction=
+            distance>0?1:-1;
+
+        enemy.vx=
             enemy.direction*1.8;
 
     }
     else{
 
-        enemy.vx =
+        enemy.vx=
             enemy.direction*.8;
 
     }
 
+
     enemy.x+=enemy.vx;
+
+    enemy.y=450;
+
 
     if(enemy.x<0){
 
@@ -1432,7 +1729,11 @@ function updateBoar(enemy){
 
     }
 
-    if(enemy.x>worldWidth-enemy.width){
+
+    if(
+        enemy.x>
+        worldWidth-enemy.width
+    ){
 
         enemy.x=
             worldWidth-enemy.width;
@@ -1441,21 +1742,24 @@ function updateBoar(enemy){
 
     }
 
-    enemy.y=450;
-
 }
 
 
 function updateOwl(enemy){
 
-    const distance =
+    const distance=
         player.x-enemy.x;
 
-    if(Math.abs(distance)<500){
 
-        enemy.x+=distance*.012;
+    if(
+        Math.abs(distance)<500
+    ){
+
+        enemy.x+=
+            distance*.012;
 
     }
+
 
     enemy.y=
         250+
@@ -1469,27 +1773,33 @@ function updateOwl(enemy){
 
 function updateGuardian(enemy){
 
-    const distance =
+    const distance=
         player.x-enemy.x;
 
-    if(Math.abs(distance)<360){
 
-        enemy.direction =
-            distance>0 ? 1 : -1;
+    if(
+        Math.abs(distance)<360
+    ){
 
-        enemy.vx =
+        enemy.direction=
+            distance>0?1:-1;
+
+        enemy.vx=
             enemy.direction*1.1;
 
     }
     else{
 
-        enemy.vx =
+        enemy.vx=
             enemy.direction*.55;
 
     }
 
+
     enemy.x+=enemy.vx;
+
     enemy.y=450;
+
 
     if(enemy.x<0){
 
@@ -1498,7 +1808,11 @@ function updateGuardian(enemy){
 
     }
 
-    if(enemy.x>worldWidth-enemy.width){
+
+    if(
+        enemy.x>
+        worldWidth-enemy.width
+    ){
 
         enemy.x=
             worldWidth-enemy.width;
@@ -1512,14 +1826,19 @@ function updateGuardian(enemy){
 
 function updateSpirit(enemy){
 
-    const distance =
+    const distance=
         player.x-enemy.x;
 
-    if(Math.abs(distance)<500){
 
-        enemy.x+=distance*.006;
+    if(
+        Math.abs(distance)<500
+    ){
+
+        enemy.x+=
+            distance*.006;
 
     }
+
 
     enemy.y=
         420+
@@ -1531,36 +1850,47 @@ function updateSpirit(enemy){
 }
 
 
-/* =========================================================
-   DANO NOS INIMIGOS
-========================================================= */
+/* =====================================================
+   ATAQUE INIMIGO
+===================================================== */
 
 function hitEnemy(enemy){
 
-    const damage =
+    const damage=
         12+
         player.combo*2;
 
+
     enemy.hp-=damage;
+
     enemy.hitTimer=8;
 
-    enemy.vx =
+    enemy.vx=
         player.facing*4;
 
     camera.shake=5;
 
+
     for(let i=0;i<8;i++){
 
         createParticle(
-            enemy.x+enemy.width/2,
-            enemy.y+enemy.height/2,
+            enemy.x+
+            enemy.width/2,
+
+            enemy.y+
+            enemy.height/2,
+
             "#e7c36b",
+
             3,
+
             (Math.random()-.5)*4,
+
             (Math.random()-.5)*4
         );
 
     }
+
 
     if(enemy.hp<=0){
 
@@ -1575,31 +1905,35 @@ function hitEnemy(enemy){
 }
 
 
-/* =========================================================
-   DANO AO PLAYER
-========================================================= */
+/* =====================================================
+   DANO
+===================================================== */
 
 function damagePlayer(amount){
 
     if(
         player.invincible>0 ||
         player.dead
-    )
+    ){
+
         return;
+
+    }
 
 
     player.health-=amount;
 
     player.invincible=55;
 
-    soundHit();
-
     camera.shake=10;
+
+    soundHit();
 
 
     if(player.health<=0){
 
         player.health=0;
+
         player.dead=true;
 
         setTimeout(()=>{
@@ -1626,52 +1960,58 @@ function damagePlayer(amount){
 
     }
 
+
     updateHUD();
 
 }
 
 
-/* =========================================================
+/* =====================================================
    COLETÁVEIS
-========================================================= */
+===================================================== */
 
 function updateCollectibles(){
 
-    for(const collectible of collectibles){
+    for(
+        const item of collectibles
+    ){
 
-        if(collectible.collected)
+        if(item.collected)
             continue;
 
-        const distanceX =
-            Math.abs(
-                player.x-collectible.x
-            );
-
-        const distanceY =
-            Math.abs(
-                player.y-collectible.y
-            );
 
         if(
-            distanceX<28 &&
-            distanceY<45
+            Math.abs(
+                player.x-item.x
+            )<28 &&
+
+            Math.abs(
+                player.y-item.y
+            )<45
         ){
 
-            collectible.collected=true;
+            item.collected=true;
 
             player.coins++;
 
             soundCoin();
 
-            for(let i=0;i<12;i++){
+
+            for(let i=0;i<10;i++){
 
                 createParticle(
-                    collectible.x,
-                    collectible.y,
+
+                    item.x,
+                    item.y,
+
                     "#e1c35d",
+
                     3,
+
                     (Math.random()-.5)*4,
+
                     (Math.random()-.5)*4
+
                 );
 
             }
@@ -1683,59 +2023,53 @@ function updateCollectibles(){
 }
 
 
-/* =========================================================
+/* =====================================================
    CHECKPOINT
-========================================================= */
+===================================================== */
 
 function updateCheckpoint(){
 
-    const checkpoint =
+    const point=
         worldWidth*.48;
 
+
     if(
-        player.x>checkpoint &&
-        player.checkpointX<checkpoint
+        player.x>point &&
+        player.checkpointX<point
     ){
 
-        player.checkpointX=checkpoint;
+        player.checkpointX=point;
         player.checkpointY=350;
 
         showMessage(
             "Ponto de descanso encontrado."
         );
 
-        for(let i=0;i<20;i++){
-
-            createParticle(
-                checkpoint,
-                400,
-                "#d6b75c",
-                3,
-                (Math.random()-.5)*3,
-                -Math.random()*3
-            );
-
-        }
-
     }
 
 }
 
 
-/* =========================================================
+/* =====================================================
    BOSS
-========================================================= */
+===================================================== */
 
 function updateBoss(){
 
     if(
         !boss ||
         boss.defeated
-    )
+    ){
+
         return;
 
+    }
 
-    if(player.x>boss.x-700){
+
+    if(
+        player.x>
+        boss.x-700
+    ){
 
         if(!boss.active){
 
@@ -1758,35 +2092,37 @@ function updateBoss(){
         boss.hitTimer--;
 
 
-    const healthPercent =
+    const percent=
         boss.hp/boss.maxHp;
 
 
-    if(healthPercent>.66)
+    if(percent>.66)
         boss.phase=1;
-
-    else if(healthPercent>.33)
+    else if(percent>.33)
         boss.phase=2;
-
     else
         boss.phase=3;
 
 
-    const distance =
+    const distance=
         player.x-boss.x;
 
-    const speed =
+
+    const speed=
         boss.phase===1
-        ?0.8
+        ?.8
         :boss.phase===2
         ?1.2
         :1.7;
 
 
-    if(Math.abs(distance)>80){
+    if(
+        Math.abs(distance)>80
+    ){
 
-        boss.x +=
-            Math.sign(distance)*speed;
+        boss.x+=
+            Math.sign(distance)*
+            speed;
 
     }
 
@@ -1795,9 +2131,12 @@ function updateBoss(){
 
     boss.attackTimer--;
 
-    if(boss.attackTimer<=0){
 
-        boss.attackTimer =
+    if(
+        boss.attackTimer<=0
+    ){
+
+        boss.attackTimer=
             boss.phase===1
             ?100
             :boss.phase===2
@@ -1824,14 +2163,19 @@ function updateBoss(){
 
     }
 
+
     updateHUD();
 
 }
 
 
+/* =====================================================
+   ATAQUE DO BOSS
+===================================================== */
+
 function bossAttack(){
 
-    const amount =
+    const amount=
         boss.phase===1
         ?2
         :boss.phase===2
@@ -1839,18 +2183,25 @@ function bossAttack(){
         :6;
 
 
-    for(let i=0;i<amount;i++){
+    for(
+        let i=0;
+        i<amount;
+        i++
+    ){
 
         setTimeout(()=>{
 
             if(
                 !boss ||
                 boss.defeated
-            )
+            ){
+
                 return;
 
+            }
 
-            const angle =
+
+            const angle=
                 Math.atan2(
                     player.y-boss.y,
                     player.x-boss.x
@@ -1858,7 +2209,7 @@ function bossAttack(){
                 (i-amount/2)*.16;
 
 
-            const speed =
+            const speed=
                 boss.phase===3
                 ?5.5
                 :4;
@@ -1874,10 +2225,12 @@ function bossAttack(){
                     boss.y+45,
 
                 vx:
-                    Math.cos(angle)*speed,
+                    Math.cos(angle)*
+                    speed,
 
                 vy:
-                    Math.sin(angle)*speed,
+                    Math.sin(angle)*
+                    speed,
 
                 size:
                     boss.phase===3
@@ -1894,25 +2247,32 @@ function bossAttack(){
 
     }
 
-    camera.shake=6;
-
 }
 
+
+/* =====================================================
+   ATACAR BOSS
+===================================================== */
 
 function hitBoss(){
 
     if(
         !boss ||
         boss.hitTimer>0
-    )
+    ){
+
         return;
 
+    }
 
-    const damage =
+
+    const damage=
         8+
         player.combo*2;
 
+
     boss.hp-=damage;
+
     boss.hitTimer=12;
 
     camera.shake=8;
@@ -1923,14 +2283,21 @@ function hitBoss(){
     for(let i=0;i<15;i++){
 
         createParticle(
-            boss.x+boss.width/2,
-            boss.y+boss.height/2,
-            boss.phase===3
-            ?"#df5548"
-            :"#e2b657",
+
+            boss.x+
+            boss.width/2,
+
+            boss.y+
+            boss.height/2,
+
+            "#e2b657",
+
             4,
+
             (Math.random()-.5)*5,
+
             (Math.random()-.5)*5
+
         );
 
     }
@@ -1944,6 +2311,7 @@ function hitBoss(){
 
     }
 
+
     updateHUD();
 
 }
@@ -1953,6 +2321,7 @@ function defeatBoss(){
 
     if(boss.defeated)
         return;
+
 
     boss.defeated=true;
 
@@ -1964,67 +2333,71 @@ function defeatBoss(){
         "CURUPIRA DERROTADO!"
     );
 
+
     setTimeout(
         showBossVictory,
-        1300
+        1200
     );
 
 }
 
 
-/* =========================================================
+/* =====================================================
    PROJÉTEIS
-========================================================= */
+===================================================== */
 
 function updateProjectiles(){
 
-    for(const projectile of projectiles){
+    for(
+        const p of projectiles
+    ){
 
-        projectile.x+=projectile.vx;
-        projectile.y+=projectile.vy;
+        p.x+=p.vx;
+        p.y+=p.vy;
 
-        projectile.life--;
+        p.life--;
 
-        if(projectile.life<=0){
 
-            projectile.dead=true;
+        if(p.life<=0){
 
+            p.dead=true;
             continue;
 
         }
 
 
         if(
+            p.x<
+            player.x+
+            player.width &&
 
-            projectile.x<
-            player.x+player.width &&
-
-            projectile.x+
-            projectile.size>
+            p.x+p.size>
             player.x &&
 
-            projectile.y<
-            player.y+player.height &&
+            p.y<
+            player.y+
+            player.height &&
 
-            projectile.y+
-            projectile.size>
+            p.y+p.size>
             player.y
 
         ){
 
             damagePlayer(
-                boss && boss.phase===3
+                boss &&
+                boss.phase===3
                 ?20
                 :12
             );
 
-            projectile.dead=true;
+            p.dead=true;
 
         }
 
     }
 
-    projectiles =
+
+    projectiles=
         projectiles.filter(
             p=>!p.dead
         );
@@ -2032,70 +2405,27 @@ function updateProjectiles(){
 }
 
 
-/* =========================================================
-   PASSOS DA MATA
-========================================================= */
-
-function drawForestSteps(){
-
-    if(!player.forestSteps)
-        return;
-
-    const start =
-        Math.floor(camera.x/70)*70;
-
-    for(
-        let worldX=start;
-        worldX<camera.x+WIDTH+100;
-        worldX+=70
-    ){
-
-        if(
-            Math.floor(worldX/70)%5!==0
-        )
-            continue;
-
-        const x =
-            worldX-camera.x;
-
-        const y =
-            458+
-            Math.sin(worldX*.05)*3;
-
-        ctx.globalAlpha=.65;
-        ctx.fillStyle="#9ac77b";
-
-        ctx.fillRect(x,y,7,11);
-        ctx.fillRect(x+9,y-5,5,7);
-
-        ctx.fillRect(x+27,y,7,11);
-        ctx.fillRect(x+35,y-5,5,7);
-
-    }
-
-    ctx.globalAlpha=1;
-
-}
-
-
-/* =========================================================
+/* =====================================================
    PARTÍCULAS
-========================================================= */
+===================================================== */
 
 function updateParticles(){
 
-    for(const particle of particles){
+    for(
+        const p of particles
+    ){
 
-        particle.x+=particle.vx;
-        particle.y+=particle.vy;
+        p.x+=p.vx;
+        p.y+=p.vy;
 
-        particle.vy+=.05;
+        p.vy+=.05;
 
-        particle.life--;
+        p.life--;
 
     }
 
-    particles =
+
+    particles=
         particles.filter(
             p=>p.life>0
         );
@@ -2103,23 +2433,35 @@ function updateParticles(){
 }
 
 
-/* =========================================================
+/* =====================================================
    CÂMERA
-========================================================= */
+===================================================== */
 
 function updateCamera(){
 
-    const target =
-        player.x-WIDTH*.38;
+    const target=
+        player.x-
+        WIDTH*.38;
 
-    camera.x +=
+
+    camera.x+=
         (target-camera.x)*.09;
+
 
     if(camera.x<0)
         camera.x=0;
 
-    if(camera.x>worldWidth-WIDTH)
-        camera.x=worldWidth-WIDTH;
+
+    if(
+        camera.x>
+        worldWidth-WIDTH
+    ){
+
+        camera.x=
+            worldWidth-WIDTH;
+
+    }
+
 
     if(camera.shake>0){
 
@@ -2133,30 +2475,36 @@ function updateCamera(){
 }
 
 
-/* =========================================================
+/* =====================================================
    HUD
-========================================================= */
+===================================================== */
 
 function updateHUD(){
 
-    healthBar.style.width =
+    healthBar.style.width=
         Math.max(
             0,
-            player.health/player.maxHealth*100
+            player.health/
+            player.maxHealth*
+            100
         )+"%";
 
-    coinsText.textContent =
+
+    coinsText.textContent=
         "✦ "+player.coins;
+
 
     if(
         boss &&
         !boss.defeated
     ){
 
-        bossHealth.style.width =
+        bossHealth.style.width=
             Math.max(
                 0,
-                boss.hp/boss.maxHp*100
+                boss.hp/
+                boss.maxHp*
+                100
             )+"%";
 
     }
@@ -2164,33 +2512,38 @@ function updateHUD(){
 }
 
 
-/* =========================================================
+/* =====================================================
    MENSAGEM
-========================================================= */
+===================================================== */
 
 let messageTimer=null;
+
 
 function showMessage(text){
 
     messageBox.textContent=text;
 
-    messageBox.style.display="block";
+    messageBox.style.display=
+        "block";
+
 
     clearTimeout(messageTimer);
 
-    messageTimer =
+
+    messageTimer=
         setTimeout(()=>{
 
-            messageBox.style.display="none";
+            messageBox.style.display=
+                "none";
 
         },3500);
 
 }
 
 
-/* =========================================================
+/* =====================================================
    FUNDO
-========================================================= */
+===================================================== */
 
 function drawBackground(){
 
@@ -2206,64 +2559,91 @@ function drawBackground(){
 
     /* LUA */
 
-    ctx.fillStyle="#d7cb91";
+    ctx.fillStyle="#d8ce9a";
 
     ctx.fillRect(
         735,
-        62,
-        28,
-        28
+        60,
+        30,
+        30
     );
+
 
     ctx.fillStyle="#07120d";
 
     ctx.fillRect(
-        748,
-        57,
-        25,
+        750,
+        55,
+        27,
         25
     );
 
 
     /* MONTANHAS */
 
-    ctx.fillStyle="#0e2117";
+    ctx.fillStyle="#0c1d14";
 
-    for(let i=0;i<12;i++){
 
-        const x =
-            i*180-camera.x*.12;
+    for(
+        let i=0;
+        i<12;
+        i++
+    ){
+
+        const x=
+            i*180-
+            camera.x*.12;
+
 
         ctx.beginPath();
 
-        ctx.moveTo(x,410);
-        ctx.lineTo(x+90,180);
-        ctx.lineTo(x+180,410);
+        ctx.moveTo(
+            x,
+            420
+        );
+
+        ctx.lineTo(
+            x+90,
+            190
+        );
+
+        ctx.lineTo(
+            x+180,
+            420
+        );
 
         ctx.fill();
 
     }
 
 
-    /* ÁRVORES DISTANTES */
+    /* ÁRVORES */
 
-    for(let i=0;i<28;i++){
+    for(
+        let i=0;
+        i<30;
+        i++
+    ){
 
         drawTree(
-            i*115-camera.x*.25,
-            300,
+            i*115-
+            camera.x*.25,
+            310,
             1.1
         );
 
     }
 
 
-    /* ÁRVORES PRÓXIMAS */
-
-    for(let i=0;i<18;i++){
+    for(
+        let i=0;
+        i<20;
+        i++
+    ){
 
         drawTree(
-            i*175-camera.x*.55,
+            i*175-
+            camera.x*.55,
             370,
             1.45
         );
@@ -2273,7 +2653,15 @@ function drawBackground(){
 }
 
 
-function drawTree(x,y,scale){
+/* =====================================================
+   ÁRVORE
+===================================================== */
+
+function drawTree(
+    x,
+    y,
+    scale
+){
 
     ctx.fillStyle="#111d16";
 
@@ -2283,6 +2671,7 @@ function drawTree(x,y,scale){
         16*scale,
         125*scale
     );
+
 
     ctx.fillStyle="#142b1d";
 
@@ -2310,46 +2699,52 @@ function drawTree(x,y,scale){
 }
 
 
-/* =========================================================
+/* =====================================================
    PLATAFORMAS
-========================================================= */
+===================================================== */
 
 function drawPlatforms(){
 
-    for(const platform of platforms){
+    for(
+        const p of platforms
+    ){
 
-        const x =
-            platform.x-camera.x;
+        const x=
+            p.x-camera.x;
+
 
         ctx.fillStyle="#1b3024";
 
         ctx.fillRect(
             x,
-            platform.y,
-            platform.width,
-            platform.height
+            p.y,
+            p.width,
+            p.height
         );
 
-        ctx.fillStyle="#4b6745";
+
+        ctx.fillStyle="#526d4b";
 
         ctx.fillRect(
             x,
-            platform.y,
-            platform.width,
+            p.y,
+            p.width,
             7
         );
 
+
         ctx.fillStyle="#718a5c";
 
+
         for(
-            let grass=platform.x;
-            grass<platform.x+platform.width;
-            grass+=18
+            let gx=p.x;
+            gx<p.x+p.width;
+            gx+=18
         ){
 
             ctx.fillRect(
-                grass-camera.x,
-                platform.y-3,
+                gx-camera.x,
+                p.y-3,
                 7,
                 3
             );
@@ -2361,40 +2756,46 @@ function drawPlatforms(){
 }
 
 
-/* =========================================================
-   COLETÁVEIS VISUAIS
-========================================================= */
+/* =====================================================
+   COLETÁVEIS DESENHO
+===================================================== */
 
 function drawCollectibles(){
 
-    for(const collectible of collectibles){
+    for(
+        const item of collectibles
+    ){
 
-        if(collectible.collected)
+        if(item.collected)
             continue;
 
-        const x =
-            collectible.x-camera.x;
 
-        const pulse =
+        const x=
+            item.x-camera.x;
+
+
+        const pulse=
             Math.sin(
                 performance.now()/200+
-                collectible.x
+                item.x
             )*3;
+
 
         ctx.fillStyle="#d8ba55";
 
         ctx.fillRect(
             x-4,
-            collectible.y+pulse-4,
+            item.y+pulse-4,
             8,
             8
         );
+
 
         ctx.fillStyle="#fff0a0";
 
         ctx.fillRect(
             x-1,
-            collectible.y+pulse-7,
+            item.y+pulse-7,
             3,
             3
         );
@@ -2404,31 +2805,37 @@ function drawCollectibles(){
 }
 
 
-/* =========================================================
-   PLAYER VISUAL
-========================================================= */
+/* =====================================================
+   PLAYER DESENHO
+===================================================== */
 
 function drawPlayer(){
 
-    const x =
+    if(
+        player.invincible>0 &&
+        Math.floor(
+            player.invincible/4
+        )%2===0
+    ){
+
+        return;
+
+    }
+
+
+    const x=
         Math.floor(
             player.x-camera.x
         );
 
-    const y =
+    const y=
         Math.floor(player.y);
-
-
-    if(
-        player.invincible>0 &&
-        Math.floor(player.invincible/4)%2===0
-    )
-        return;
 
 
     /* SOMBRA */
 
-    ctx.fillStyle="rgba(0,0,0,.35)";
+    ctx.fillStyle=
+        "rgba(0,0,0,.35)";
 
     ctx.fillRect(
         x-4,
@@ -2538,10 +2945,13 @@ function drawPlayer(){
         y+27
     );
 
+
     if(player.facing<0)
         ctx.scale(-1,1);
 
+
     ctx.fillStyle="#c9c5b2";
+
 
     if(player.attacking){
 
@@ -2575,29 +2985,39 @@ function drawPlayer(){
 
     }
 
+
     ctx.restore();
 
 }
 
 
-/* =========================================================
-   INIMIGOS VISUAIS
-========================================================= */
+/* =====================================================
+   INIMIGOS DESENHO
+===================================================== */
 
 function drawEnemies(){
 
-    for(const enemy of enemies){
+    for(
+        const enemy of enemies
+    ){
 
-        const x =
+        const x=
             Math.floor(
                 enemy.x-camera.x
             );
 
-        const y =
+        const y=
             Math.floor(enemy.y);
 
-        if(enemy.hitTimer%2===1)
+
+        if(
+            enemy.hitTimer%2===1
+        ){
+
             ctx.globalAlpha=.5;
+
+        }
+
 
         if(enemy.type==="boar")
             drawBoar(x,y);
@@ -2610,6 +3030,7 @@ function drawEnemies(){
 
         if(enemy.type==="spirit")
             drawSpirit(x,y);
+
 
         ctx.globalAlpha=1;
 
@@ -2661,15 +3082,6 @@ function drawBoar(x,y){
         y+28,
         7,
         7
-    );
-
-    ctx.fillStyle="#d7d0ad";
-
-    ctx.fillRect(
-        x+35,
-        y+16,
-        6,
-        3
     );
 
 }
@@ -2734,15 +3146,6 @@ function drawOwl(x,y){
         3
     );
 
-    ctx.fillStyle="#b58b4d";
-
-    ctx.fillRect(
-        x+16,
-        y+15,
-        5,
-        5
-    );
-
 }
 
 
@@ -2803,7 +3206,8 @@ function drawGuardian(x,y){
 
 function drawSpirit(x,y){
 
-    ctx.fillStyle="rgba(119,175,137,.75)";
+    ctx.fillStyle=
+        "rgba(119,175,137,.75)";
 
     ctx.fillRect(
         x+5,
@@ -2828,45 +3232,41 @@ function drawSpirit(x,y){
         5
     );
 
-    ctx.fillStyle="#173025";
-
-    ctx.fillRect(
-        x+12,
-        y+25,
-        13,
-        3
-    );
-
 }
 
 
-/* =========================================================
-   BOSS VISUAL
-========================================================= */
+/* =====================================================
+   BOSS DESENHO
+===================================================== */
 
 function drawBoss(){
 
     if(
         !boss ||
         boss.defeated
-    )
+    ){
+
         return;
 
-    const x =
+    }
+
+
+    const x=
         Math.floor(
             boss.x-camera.x
         );
 
-    const y =
+    const y=
         Math.floor(boss.y);
 
 
-    ctx.fillStyle =
+    ctx.fillStyle=
         boss.phase===1
         ?"rgba(60,130,70,.14)"
         :boss.phase===2
         ?"rgba(190,135,45,.17)"
         :"rgba(215,55,55,.20)";
+
 
     ctx.fillRect(
         x-25,
@@ -2878,12 +3278,22 @@ function drawBoss(){
 
     /* CORPO */
 
-    ctx.fillStyle =
+    ctx.fillStyle=
+        boss.phase===1
+        ?" #315b3b"
+        :boss.phase===2
+        ?" #8d692e"
+        :" #8e302f";
+
+    /* remove espaços */
+
+    ctx.fillStyle=
         boss.phase===1
         ?"#315b3b"
         :boss.phase===2
         ?"#8d692e"
         :"#8e302f";
+
 
     ctx.fillRect(
         x+15,
@@ -2914,20 +3324,6 @@ function drawBoss(){
         y,
         66,
         17
-    );
-
-    ctx.fillRect(
-        x+5,
-        y+10,
-        15,
-        45
-    );
-
-    ctx.fillRect(
-        x+70,
-        y+10,
-        15,
-        45
     );
 
 
@@ -2971,31 +3367,34 @@ function drawBoss(){
 }
 
 
-/* =========================================================
-   PROJÉTEIS VISUAIS
-========================================================= */
+/* =====================================================
+   PROJÉTEIS DESENHO
+===================================================== */
 
 function drawProjectiles(){
 
-    for(const projectile of projectiles){
+    for(
+        const p of projectiles
+    ){
 
-        const x =
-            projectile.x-camera.x;
+        const x=
+            p.x-camera.x;
+
 
         ctx.fillStyle="#e6b74e";
 
         ctx.fillRect(
             x,
-            projectile.y,
-            projectile.size,
-            projectile.size
+            p.y,
+            p.size,
+            p.size
         );
 
         ctx.fillStyle="#fff0a0";
 
         ctx.fillRect(
             x+2,
-            projectile.y+2,
+            p.y+2,
             3,
             3
         );
@@ -3005,27 +3404,28 @@ function drawProjectiles(){
 }
 
 
-/* =========================================================
-   PARTÍCULAS VISUAIS
-========================================================= */
+/* =====================================================
+   PARTÍCULAS DESENHO
+===================================================== */
 
 function drawParticles(){
 
-    for(const particle of particles){
+    for(
+        const p of particles
+    ){
 
-        ctx.globalAlpha =
-            particle.life/particle.maxLife;
+        ctx.globalAlpha=
+            p.life/p.maxLife;
 
-        ctx.fillStyle =
-            particle.color;
+        ctx.fillStyle=p.color;
 
         ctx.fillRect(
             Math.floor(
-                particle.x-camera.x
+                p.x-camera.x
             ),
-            Math.floor(particle.y),
-            particle.size,
-            particle.size
+            Math.floor(p.y),
+            p.size,
+            p.size
         );
 
     }
@@ -3035,9 +3435,76 @@ function drawParticles(){
 }
 
 
-/* =========================================================
+/* =====================================================
+   PASSOS DA MATA
+===================================================== */
+
+function drawForestSteps(){
+
+    if(!player.forestSteps)
+        return;
+
+
+    const start=
+        Math.floor(
+            camera.x/70
+        )*70;
+
+
+    for(
+        let x=start;
+        x<
+        camera.x+WIDTH+100;
+        x+=70
+    ){
+
+        if(
+            Math.floor(x/70)%5!==0
+        ){
+
+            continue;
+
+        }
+
+
+        const screenX=
+            x-camera.x;
+
+
+        const y=
+            458+
+            Math.sin(x*.05)*3;
+
+
+        ctx.globalAlpha=.65;
+
+        ctx.fillStyle="#9ac77b";
+
+        ctx.fillRect(
+            screenX,
+            y,
+            7,
+            11
+        );
+
+        ctx.fillRect(
+            screenX+9,
+            y-5,
+            5,
+            7
+        );
+
+    }
+
+
+    ctx.globalAlpha=1;
+
+}
+
+
+/* =====================================================
    VITÓRIA
-========================================================= */
+===================================================== */
 
 function showBossVictory(){
 
@@ -3051,7 +3518,8 @@ function showBossVictory(){
 
             <div class="subtitle">
 
-                O Curupira permanece em silêncio.
+                O Curupira permanece
+                em silêncio.
 
                 <br><br>
 
@@ -3071,29 +3539,34 @@ function showBossVictory(){
 
                 <br><br>
 
-                Agora caminhos ocultos,
-                pegadas e passagens secretas
-                podem ser revelados.
+                Agora pegadas e caminhos
+                ocultos podem ser revelados.
 
             </div>
 
-            <button id="continueButton" type="button">
+            <button
+                id="continueButton"
+                type="button">
+
                 CONTINUAR
+
             </button>
 
         </div>
-
     `;
+
 
     menu.classList.remove("hidden");
 
+
     document
         .getElementById("continueButton")
-        .onclick=()=>{
+        .onclick=function(){
 
             player.forestSteps=true;
 
             currentStage++;
+
 
             if(currentStage>=5){
 
@@ -3102,6 +3575,7 @@ function showBossVictory(){
                 return;
 
             }
+
 
             menu.classList.add("hidden");
 
@@ -3116,28 +3590,23 @@ function showBossVictory(){
 }
 
 
-/* =========================================================
+/* =====================================================
    PRÓXIMA FASE
-========================================================= */
+===================================================== */
 
 function nextStage(){
 
     currentStage++;
 
+
     if(currentStage>=5){
 
-        currentStage=4;
+        finishWorld();
 
         return;
 
     }
 
-    showStageIntro();
-
-}
-
-
-function showStageIntro(){
 
     menu.innerHTML=`
 
@@ -3163,19 +3632,24 @@ function showStageIntro(){
 
             </div>
 
-            <button id="enterStage" type="button">
+            <button
+                id="enterStage"
+                type="button">
+
                 ENTRAR NA FASE
+
             </button>
 
         </div>
-
     `;
+
 
     menu.classList.remove("hidden");
 
+
     document
         .getElementById("enterStage")
-        .onclick=()=>{
+        .onclick=function(){
 
             menu.classList.add("hidden");
 
@@ -3190,9 +3664,9 @@ function showStageIntro(){
 }
 
 
-/* =========================================================
+/* =====================================================
    FIM DO MUNDO
-========================================================= */
+===================================================== */
 
 function finishWorld(){
 
@@ -3228,19 +3702,24 @@ function finishWorld(){
 
             </div>
 
-            <button id="restart" type="button">
+            <button
+                id="restartButton"
+                type="button">
+
                 JOGAR NOVAMENTE
+
             </button>
 
         </div>
-
     `;
+
 
     menu.classList.remove("hidden");
 
+
     document
-        .getElementById("restart")
-        .onclick=()=>{
+        .getElementById("restartButton")
+        .onclick=function(){
 
             location.reload();
 
@@ -3249,107 +3728,124 @@ function finishWorld(){
 }
 
 
-/* =========================================================
+/* =====================================================
    SAÍDA DA FASE
-========================================================= */
+===================================================== */
 
 function checkStageExit(){
 
-    if(currentStage<4){
-
-        if(
-            player.x>
-            worldWidth-140
-        ){
-
-            nextStage();
-
-        }
-
-        return;
-
-    }
-
-
     if(
-        currentStage===4 &&
-        boss &&
-        boss.defeated &&
+        currentStage<4 &&
         player.x>
         worldWidth-140
     ){
 
-        finishWorld();
+        nextStage();
 
     }
 
 }
 
 
-/* =========================================================
-   COMEÇAR O JOGO
-========================================================= */
+/* =====================================================
+   INICIAR JOGO
+===================================================== */
+
+let gameStarted=false;
+
 
 function startGame(){
 
+    if(gameStarted)
+        return;
+
+
+    gameStarted=true;
+
+
     console.log(
-        "O ÚLTIMO FOGO: iniciando..."
+        "O ÚLTIMO FOGO — iniciando..."
     );
+
+
+    /* ÁUDIO NÃO PODE IMPEDIR O JOGO */
 
     try{
+
         startAudio();
-    }catch(error){}
 
-    currentStage=0;
+    }catch(error){
 
-    player.coins=0;
-    player.forestSteps=false;
-    player.dead=false;
+        console.log(
+            "Áudio ignorado."
+        );
 
-    player.checkpointX=120;
-    player.checkpointY=350;
+    }
 
-    player.x=120;
-    player.y=350;
 
-    player.vx=0;
-    player.vy=0;
+    try{
 
-    player.health=player.maxHealth;
+        currentStage=0;
 
-    buildStage();
+        player.coins=0;
 
-    menu.classList.add("hidden");
+        player.forestSteps=false;
 
-    showMessage(
-        "Minha avó dizia que a floresta era viva..."
-    );
+        player.dead=false;
+
+        player.x=120;
+
+        player.y=350;
+
+        player.vx=0;
+
+        player.vy=0;
+
+        player.health=
+            player.maxHealth;
+
+        player.checkpointX=120;
+
+        player.checkpointY=350;
+
+
+        buildStage();
+
+
+        menu.classList.add(
+            "hidden"
+        );
+
+
+        showMessage(
+            "Minha avó dizia que a floresta era viva..."
+        );
+
+
+        console.log(
+            "JOGO INICIADO!"
+        );
+
+    }
+    catch(error){
+
+        gameStarted=false;
+
+        console.error(error);
+
+        alert(
+            "Erro ao iniciar o jogo:\n\n"+
+            error.message
+        );
+
+    }
 
 }
 
 
-/* BOTÃO PRINCIPAL */
-
-startButton.addEventListener(
-    "click",
-    startGame
-);
-
-startButton.addEventListener(
-    "pointerup",
-    event=>{
-
-        event.preventDefault();
-
-        startGame();
-
-    }
-);
-
-
-/* =========================================================
-   LOOP
-========================================================= */
+/* =====================================================
+   UPDATE
+===================================================== */
 
 function update(){
 
@@ -3358,20 +3854,33 @@ function update(){
     ){
 
         updatePlayer();
+
         updateEnemies();
+
         updateCollectibles();
+
         updateCheckpoint();
+
         updateBoss();
+
         updateProjectiles();
+
         updateParticles();
+
         updateCamera();
+
         checkStageExit();
+
         updateHUD();
 
     }
 
 }
 
+
+/* =====================================================
+   DRAW
+===================================================== */
 
 function draw(){
 
@@ -3382,34 +3891,52 @@ function draw(){
         HEIGHT
     );
 
+
     ctx.save();
+
 
     if(camera.shake>0){
 
         ctx.translate(
+
             (Math.random()-.5)*
             camera.shake,
 
             (Math.random()-.5)*
             camera.shake
+
         );
 
     }
 
+
     drawBackground();
+
     drawPlatforms();
+
     drawCollectibles();
+
     drawProjectiles();
+
     drawEnemies();
+
     drawBoss();
+
     drawForestSteps();
+
     drawPlayer();
+
     drawParticles();
+
 
     ctx.restore();
 
 }
 
+
+/* =====================================================
+   LOOP
+===================================================== */
 
 function gameLoop(){
 
@@ -3424,15 +3951,22 @@ function gameLoop(){
 }
 
 
-/* =========================================================
-   INICIALIZAÇÃO
-========================================================= */
+/* =====================================================
+   CARREGAR
+===================================================== */
 
 buildStage();
 
+updateHUD();
+
 gameLoop();
+
+
+console.log(
+    "O Último Fogo carregado corretamente."
+);
 
 </script>
 
 </body>
-          </html>
+      </html>
